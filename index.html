@@ -726,6 +726,64 @@
         }
 
         /* ============================================================
+           BLUR BLOBS — ambient background depth
+        ============================================================ */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            will-change: transform;
+        }
+        .blob-blue {
+            background: radial-gradient(circle, #3b82f6, transparent 70%);
+            filter: blur(80px);
+            opacity: 0.12;
+        }
+        .blob-emerald {
+            background: radial-gradient(circle, #10b981, transparent 70%);
+            filter: blur(90px);
+            opacity: 0.09;
+        }
+        .blob-indigo {
+            background: radial-gradient(circle, #6366f1, transparent 70%);
+            filter: blur(100px);
+            opacity: 0.07;
+        }
+
+        /* Urgency text */
+        .urgency-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--navy-500);
+        }
+        .urgency-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--emerald-500);
+            border-radius: 50%;
+            flex-shrink: 0;
+            animation: urgencyPulse 2s ease infinite;
+        }
+        @keyframes urgencyPulse {
+            0%   { box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
+            60%  { box-shadow: 0 0 0 7px rgba(16,185,129,0); }
+            100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+        }
+
+        /* adv-icon micro animation */
+        .adv-icon {
+            transition: transform 0.35s var(--ease-out);
+        }
+        .adv-card:hover .adv-icon {
+            transform: scale(1.12) rotate(-6deg);
+        }
+
+        /* ============================================================
            SECTION GENERIC
         ============================================================ */
         .section {
@@ -1325,6 +1383,9 @@
     ============================================================ -->
     <section class="hero" id="home">
         <div class="hero-grid"></div>
+        <!-- Blur blobs -->
+        <div class="blob blob-blue" style="width:480px;height:480px;top:-80px;right:-60px;"></div>
+        <div class="blob blob-emerald" style="width:320px;height:320px;bottom:0;left:-40px;"></div>
         <div class="container hero-inner">
             <div class="hero-content">
                 <div class="hero-trust" data-reveal>
@@ -1351,6 +1412,10 @@
                     <a href="#bikes" class="btn btn-ghost btn-lg">
                         Lihat Pilihan Motor
                     </a>
+                </div>
+                <div class="urgency-row" data-reveal data-reveal-delay="3">
+                    <span class="urgency-dot"></span>
+                    <span>⚡ Unit terbatas — hanya 4 motor tersedia hari ini</span>
                 </div>
 
                 <div class="hero-meta" data-reveal data-reveal-delay="4">
@@ -1475,7 +1540,8 @@
     <!-- ============================================================
          MOTORCYCLE SELECTION
     ============================================================ -->
-    <section class="section" id="bikes">
+    <section class="section" id="bikes" style="position:relative;overflow:hidden;">
+        <div class="blob blob-indigo" style="width:500px;height:500px;top:-100px;left:-150px;"></div>
         <div class="container">
             <div class="section-header">
                 <div class="eyebrow" data-reveal>🏍️ Pilihan Motor</div>
@@ -1620,7 +1686,8 @@
     <!-- ============================================================
          KEY ADVANTAGES
     ============================================================ -->
-    <section class="section" id="advantages" style="background: var(--navy-50);">
+    <section class="section" id="advantages" style="background: var(--navy-50); position:relative; overflow:hidden;">
+        <div class="blob blob-blue" style="width:400px;height:400px;bottom:-80px;right:-80px;"></div>
         <div class="container">
             <div class="section-header">
                 <div class="eyebrow" data-reveal>✨ Kenapa Pilih Kami</div>
