@@ -98,7 +98,7 @@
             font-size: 16px;
             line-height: 1.6;
             color: var(--navy-900);
-            background: var(--white);
+            background: linear-gradient(180deg, #ffffff 0%, #f0f6ff 30%, #f8fafc 60%, #f0f9f4 100%);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             font-feature-settings: "cv11", "ss01";
@@ -733,22 +733,18 @@
             border-radius: 50%;
             pointer-events: none;
             z-index: 0;
-            will-change: transform;
         }
         .blob-blue {
-            background: radial-gradient(circle, #3b82f6, transparent 70%);
-            filter: blur(80px);
-            opacity: 0.12;
+            background: radial-gradient(circle at center, rgba(59,130,246,0.55) 0%, rgba(59,130,246,0.15) 50%, transparent 70%);
+            filter: blur(60px);
         }
         .blob-emerald {
-            background: radial-gradient(circle, #10b981, transparent 70%);
-            filter: blur(90px);
-            opacity: 0.09;
+            background: radial-gradient(circle at center, rgba(16,185,129,0.45) 0%, rgba(16,185,129,0.12) 50%, transparent 70%);
+            filter: blur(70px);
         }
         .blob-indigo {
-            background: radial-gradient(circle, #6366f1, transparent 70%);
-            filter: blur(100px);
-            opacity: 0.07;
+            background: radial-gradient(circle at center, rgba(99,102,241,0.40) 0%, rgba(99,102,241,0.10) 50%, transparent 70%);
+            filter: blur(65px);
         }
 
         /* Urgency text */
@@ -1384,8 +1380,8 @@
     <section class="hero" id="home">
         <div class="hero-grid"></div>
         <!-- Blur blobs -->
-        <div class="blob blob-blue" style="width:480px;height:480px;top:-80px;right:-60px;"></div>
-        <div class="blob blob-emerald" style="width:320px;height:320px;bottom:0;left:-40px;"></div>
+        <div class="blob blob-blue" style="width:500px;height:500px;top:0;right:0;"></div>
+        <div class="blob blob-emerald" style="width:360px;height:360px;bottom:20px;left:0;"></div>
         <div class="container hero-inner">
             <div class="hero-content">
                 <div class="hero-trust" data-reveal>
