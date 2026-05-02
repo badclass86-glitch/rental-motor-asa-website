@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://rentalmotorasa.com/</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://rentalmotorasa.com/beat-led.jpg</image:loc>
+      <image:title>Honda Beat LED — Rental Motor ASA Sentani</image:title>
+      <image:caption>Sewa motor Honda Beat LED di Sentani Jayapura, Rp 100.000 per hari</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://rentalmotorasa.com/beat-fi.jpg</image:loc>
+      <image:title>Honda Beat FI — Rental Motor ASA Sentani</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://rentalmotorasa.com/beat-street.jpg</image:loc>
+      <image:title>Honda Beat Street — Rental Motor ASA Sentani</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://rentalmotorasa.com/mio-m3.jpg</image:loc>
+      <image:title>Yamaha Mio M3 — Rental Motor ASA Sentani</image:title>
+    </image:image>
+  </url>
+</urlset>
