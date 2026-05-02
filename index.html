@@ -368,24 +368,33 @@
         .hero-meta {
             display: flex;
             flex-wrap: wrap;
-            gap: 24px;
+            gap: 0;
             margin-top: 32px;
-            padding-top: 32px;
+            padding-top: 28px;
             border-top: 1px solid var(--navy-200);
         }
         .hero-meta-item {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 3px;
+            padding: 0 24px 0 0;
+            margin-right: 24px;
+            border-right: 1px solid var(--navy-200);
+        }
+        .hero-meta-item:last-child {
+            border-right: none;
+            padding-right: 0;
+            margin-right: 0;
         }
         .hero-meta-num {
-            font-size: 28px;
-            font-weight: 700;
+            font-size: 26px;
+            font-weight: 800;
             color: var(--navy-900);
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
         }
         .hero-meta-label {
-            font-size: 13px;
+            font-size: 12.5px;
             color: var(--navy-500);
             font-weight: 500;
         }
@@ -783,10 +792,10 @@
            SECTION GENERIC
         ============================================================ */
         .section {
-            padding: 80px 0;
+            padding: 64px 0;
         }
         @media (min-width: 768px) {
-            .section { padding: 100px 0; }
+            .section { padding: 80px 0; }
         }
         .section-header {
             text-align: center;
@@ -1264,9 +1273,47 @@
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            gap: 16px;
-            font-size: 13.5px;
+            gap: 8px;
+            font-size: 13px;
             color: var(--navy-500);
+            padding-right: 72px;
+        }
+
+        /* ============================================================
+           MAPS SECTION
+        ============================================================ */
+        .maps-section {
+            background: var(--navy-50);
+        }
+        .maps-wrapper {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 32px -8px rgba(15, 23, 42, 0.12),
+                        0 0 0 1px rgba(15, 23, 42, 0.06);
+        }
+        .maps-cta {
+            display: flex;
+            justify-content: center;
+            padding: 16px;
+            background: var(--white);
+            border-top: 1px solid var(--navy-100);
+        }
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: 1.5px solid var(--navy-300);
+            border-radius: var(--r-full);
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--navy-700);
+            transition: border-color 0.2s, background 0.2s, color 0.2s;
+        }
+        .btn-outline:hover {
+            border-color: var(--blue-500);
+            color: var(--blue-600);
+            background: var(--blue-50);
         }
 
         /* ============================================================
@@ -1274,23 +1321,23 @@
         ============================================================ */
         .float-wa {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 24px;
+            right: 24px;
             z-index: 60;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 14px 20px;
+            gap: 8px;
+            padding: 13px;
             background: #25D366;
             color: var(--white);
             border-radius: var(--r-full);
-            font-size: 14.5px;
+            font-size: 13.5px;
             font-weight: 600;
-            box-shadow: 0 10px 30px -8px rgba(37, 211, 102, 0.5),
-                        0 0 0 0 rgba(37, 211, 102, 0.6);
+            box-shadow: 0 8px 24px -6px rgba(37, 211, 102, 0.55),
+                        0 0 0 0 rgba(37, 211, 102, 0.4);
             opacity: 0;
             transform: translateY(20px) scale(0.92);
-            transition: all 0.4s var(--ease-out);
+            transition: padding 0.35s var(--ease-out), background 0.2s, transform 0.4s var(--ease-out), opacity 0.4s var(--ease-out);
             animation: waPulse 2.4s ease-in-out infinite;
         }
         .float-wa.show {
@@ -1300,10 +1347,23 @@
         .float-wa:hover {
             background: #1FB855;
             transform: translateY(-2px) scale(1.04);
+            padding: 13px 18px;
+        }
+        .float-wa .wa-label {
+            max-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            opacity: 0;
+            transition: max-width 0.35s var(--ease-out), opacity 0.25s;
+        }
+        .float-wa:hover .wa-label {
+            max-width: 130px;
+            opacity: 1;
         }
         .float-wa svg {
             width: 22px;
             height: 22px;
+            flex-shrink: 0;
         }
         @keyframes waPulse {
             0%, 100% { box-shadow: 0 10px 30px -8px rgba(37, 211, 102, 0.5),
@@ -1856,6 +1916,39 @@
                        target="_blank" rel="noopener" class="btn btn-ghost btn-lg">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                         Buka di Maps
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         LOKASI / GOOGLE MAPS
+    ============================================================ -->
+    <section class="section maps-section" id="lokasi">
+        <div class="container">
+            <div class="section-header" data-reveal>
+                <div class="eyebrow">📍 Temukan Kami</div>
+                <h2 class="h-section">Lokasi Rental Motor ASA</h2>
+                <p class="lead" style="margin: 0 auto;">
+                    Jln. Raya Sentani Pojok, Sentani Kota, Kab. Jayapura, Papua 99352
+                </p>
+            </div>
+            <div class="maps-wrapper" data-reveal data-reveal-delay="1">
+                <iframe
+                    src="https://maps.google.com/maps?q=Sentani+Pojok+Sentani+Kota+Jayapura+Papua&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                    width="100%"
+                    height="380"
+                    style="border:0; border-radius: 20px; display:block;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="Lokasi Rental Motor ASA — Sentani, Jayapura">
+                </iframe>
+                <div class="maps-cta">
+                    <a href="https://maps.app.goo.gl/AatV5ksWqmQGrRDv8" target="_blank" rel="noopener" class="btn btn-outline btn-sm">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Buka di Google Maps
                     </a>
                 </div>
             </div>
