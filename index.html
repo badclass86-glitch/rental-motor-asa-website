@@ -195,6 +195,7 @@
             font-size: 17px;
             color: var(--navy-900);
             letter-spacing: -0.01em;
+            white-space: nowrap;
         }
         .logo-mark {
             width: 36px;
@@ -299,6 +300,17 @@
                 radial-gradient(ellipse 60% 40% at 50% 0%, var(--blue-50), transparent 70%),
                 linear-gradient(180deg, var(--white), var(--navy-50));
         }
+        /* Noise texture overlay */
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-size: 200px 200px;
+        }
         .hero-grid {
             position: absolute;
             inset: 0;
@@ -378,145 +390,339 @@
             font-weight: 500;
         }
 
-        /* Hero Visual */
+        /* ============================================================
+           PHONE MOCKUP HERO VISUAL
+        ============================================================ */
         .hero-visual {
             position: relative;
-            aspect-ratio: 1 / 1;
-            max-width: 540px;
-            margin: 0 auto;
-            width: 100%;
-        }
-        .hero-card {
-            position: absolute;
-            background: var(--white);
-            border-radius: var(--r-2xl);
-            box-shadow: var(--shadow-xl);
-            border: 1px solid var(--navy-200);
-            overflow: hidden;
-        }
-        .hero-card.main {
-            top: 8%;
-            left: 8%;
-            right: 8%;
-            bottom: 8%;
-            background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 28px;
-            color: var(--white);
-        }
-        .hero-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-        .hero-card-bike-img {
-            width: 100%;
-            height: 55%;
-            margin: 16px 0;
-            background: linear-gradient(135deg, var(--navy-700), var(--navy-800));
-            border-radius: var(--r-lg);
-            overflow: hidden;
-            display: grid;
-            place-items: center;
-            font-size: 80px;
-            position: relative;
-        }
-        .hero-card-bike-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .hero-card-bike-img::after {
-            content: '🏍️';
-            position: absolute;
-            display: grid;
-            place-items: center;
-            inset: 0;
-            background: linear-gradient(135deg, var(--navy-700), var(--navy-800));
-            font-size: 100px;
-            z-index: -1;
-        }
-        .hero-card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-        .hero-card-label {
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--navy-300);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 4px;
-        }
-        .hero-card-name { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
-        .hero-card-price { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
-        .hero-card-price-unit { font-size: 13px; font-weight: 500; color: var(--navy-300); margin-left: 4px; }
-        .hero-card-status {
-            display: inline-flex;
+            justify-content: center;
             align-items: center;
-            gap: 6px;
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--emerald-500);
-            padding: 4px 12px;
-            border-radius: var(--r-full);
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .hero-card-status::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            background: var(--emerald-500);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--emerald-500);
+            min-height: 560px;
+            margin: 0 auto;
+            overflow: visible;
         }
 
-        /* Floating mini cards */
-        .hero-float {
+        /* Glow behind phone */
+        .phone-glow {
             position: absolute;
-            background: var(--white);
-            padding: 14px 18px;
-            border-radius: var(--r-lg);
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--navy-200);
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, rgba(37,99,235,0.22) 0%, rgba(16,185,129,0.08) 50%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(48px);
+            z-index: 0;
+            animation: glowPulse 4s ease-in-out infinite;
+        }
+        @keyframes glowPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.75; }
+        }
+
+        /* Phone outer shell */
+        .phone-frame {
+            width: 248px;
+            height: 504px;
+            background: linear-gradient(160deg, #1e293b 0%, #0f172a 60%, #1a2540 100%);
+            border-radius: 42px;
+            border: 1.5px solid rgba(255,255,255,0.10);
+            box-shadow:
+                0 0 0 1px rgba(0,0,0,0.5),
+                0 48px 96px -24px rgba(0,0,0,0.55),
+                0 0 80px -10px rgba(37,99,235,0.18),
+                inset 0 1px 0 rgba(255,255,255,0.07),
+                inset 0 -1px 0 rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            transform: perspective(1200px) rotateY(-12deg) rotateX(4deg);
+            transition: transform 0.6s var(--ease-out);
+        }
+        .phone-frame:hover {
+            transform: perspective(1200px) rotateY(-6deg) rotateX(2deg) translateY(-4px);
+        }
+        @media (min-width: 1024px) {
+            .phone-frame {
+                transform: perspective(1200px) rotateY(-14deg) rotateX(5deg);
+            }
+            .phone-frame:hover {
+                transform: perspective(1200px) rotateY(-8deg) rotateX(3deg) translateY(-6px);
+            }
+        }
+        /* Side button */
+        .phone-frame::before {
+            content: '';
+            position: absolute;
+            right: -3px;
+            top: 120px;
+            width: 3px;
+            height: 64px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 2px;
+        }
+        /* Dynamic Island */
+        .phone-island {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 78px;
+            height: 26px;
+            background: #000;
+            border-radius: 20px;
+            z-index: 10;
+        }
+        /* Screen */
+        .phone-screen {
+            position: absolute;
+            inset: 3px;
+            border-radius: 40px;
+            overflow: hidden;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+        }
+        /* Status bar */
+        .phone-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px 6px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #0f172a;
+            background: #f8fafc;
+            flex-shrink: 0;
+        }
+        .phone-status-icons {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        /* Mini Nav */
+        .phone-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 14px 8px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            flex-shrink: 0;
+        }
+        .phone-logo-mini {
+            font-size: 11px;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.02em;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 5px;
+        }
+        .phone-logo-dot {
+            width: 18px;
+            height: 18px;
+            background: #0f172a;
+            border-radius: 5px;
+            display: grid;
+            place-items: center;
+            font-size: 9px;
+        }
+        .phone-btn-mini {
+            font-size: 9px;
+            font-weight: 700;
+            background: #0f172a;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 6px;
+            letter-spacing: 0.01em;
+        }
+        /* Phone Content */
+        .phone-content {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background: #f8fafc;
+        }
+        /* Hero text inside phone */
+        .phone-hero-area {
+            padding: 12px 14px 0;
+            background: linear-gradient(135deg, #0f172a, #1e3a8a);
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .phone-eyebrow {
+            font-size: 7.5px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: #93c5fd;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .phone-heading {
+            font-size: 16px;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+        }
+        /* Bike card inside phone */
+        .phone-bike {
+            background: #fff;
+            border-radius: 12px;
+            margin: 0 14px 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(15,23,42,0.12);
+            flex-shrink: 0;
+        }
+        .phone-bike-img {
+            width: 100%;
+            height: 110px;
+            object-fit: cover;
+            display: block;
+            background: #1e293b;
+        }
+        .phone-bike-body {
+            padding: 10px 12px;
+        }
+        .phone-bike-brand {
+            font-size: 8px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .phone-bike-name {
             font-size: 13px;
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: -0.02em;
+            margin: 2px 0 6px;
+        }
+        .phone-bike-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .phone-bike-price {
+            font-size: 14px;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.02em;
+        }
+        .phone-bike-price span {
+            font-size: 9px;
+            font-weight: 500;
+            color: #64748b;
+        }
+        .phone-wa-btn {
+            background: #25D366;
+            color: #fff;
+            font-size: 8.5px;
+            font-weight: 700;
+            padding: 5px 10px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        /* Stats bar inside phone */
+        .phone-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 14px;
+            background: #fff;
+            border-top: 1px solid #f1f5f9;
+            margin: 0 14px;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(15,23,42,0.06);
+        }
+        .phone-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .phone-stat-num {
+            font-size: 11px;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.02em;
+        }
+        .phone-stat-label {
+            font-size: 7px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        /* Home indicator */
+        .phone-indicator {
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: #f8fafc;
+        }
+        .phone-indicator::after {
+            content: '';
+            width: 60px;
+            height: 4px;
+            background: #0f172a;
+            border-radius: 4px;
+            opacity: 0.15;
+        }
+
+        /* Floating mini cards — glassmorphism */
+        .hero-float {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            padding: 12px 16px;
+            border-radius: var(--r-lg);
+            box-shadow: 0 8px 24px -8px rgba(15,23,42,0.15), 0 1px 0 rgba(255,255,255,0.9) inset;
+            border: 1px solid rgba(255,255,255,0.6);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12.5px;
             font-weight: 600;
             color: var(--navy-900);
             animation: heroFloat 6s var(--ease-soft) infinite;
+            z-index: 2;
         }
         .hero-float-1 {
-            top: 4%;
-            left: -2%;
+            top: 6%;
+            left: 2%;
             animation-delay: 0s;
         }
         .hero-float-2 {
-            bottom: 8%;
-            right: -4%;
-            animation-delay: 1.5s;
+            bottom: 6%;
+            right: 2%;
+            animation-delay: 1.8s;
+        }
+        @media (min-width: 480px) {
+            .hero-float-1 { left: -4%; }
+            .hero-float-2 { right: -4%; }
         }
         @keyframes heroFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
         .hero-float-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--blue-50);
+            width: 30px;
+            height: 30px;
+            background: rgba(37, 99, 235, 0.1);
             color: var(--blue-600);
             border-radius: var(--r-sm);
             display: grid;
             place-items: center;
-            font-size: 16px;
+            font-size: 15px;
+            flex-shrink: 0;
         }
         .hero-float-2 .hero-float-icon {
-            background: var(--emerald-50);
-            color: var(--emerald-600);
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--emerald-500);
         }
 
         /* ============================================================
@@ -1168,36 +1374,97 @@
             </div>
 
             <div class="hero-visual" data-reveal data-reveal-delay="2">
-                <div class="hero-card main">
-                    <div class="hero-card-header">
-                        <div>
-                            <div class="hero-card-label">Bestseller</div>
-                            <div class="hero-card-name">Honda Beat LED</div>
+
+                <!-- Glow behind phone -->
+                <div class="phone-glow"></div>
+
+                <!-- Phone Frame -->
+                <div class="phone-frame">
+                    <!-- Dynamic Island -->
+                    <div class="phone-island"></div>
+
+                    <div class="phone-screen">
+                        <!-- Status Bar -->
+                        <div class="phone-status">
+                            <span>09.41</span>
+                            <div class="phone-status-icons">
+                                <svg width="11" height="8" viewBox="0 0 11 8" fill="#0f172a"><rect x="0" y="3" width="2" height="5" rx="0.5"/><rect x="3" y="2" width="2" height="6" rx="0.5"/><rect x="6" y="1" width="2" height="7" rx="0.5"/><rect x="9" y="0" width="2" height="8" rx="0.5"/></svg>
+                                <svg width="12" height="9" viewBox="0 0 12 9" fill="none" stroke="#0f172a" stroke-width="1.5" stroke-linecap="round"><path d="M1 6.5C2.5 4.5 4.5 3.5 6 3.5S9.5 4.5 11 6.5"/><path d="M3 8.5C4 7 5 6.5 6 6.5s2 .5 3 2"/><circle cx="6" cy="9" r="0.8" fill="#0f172a" stroke="none"/></svg>
+                                <svg width="20" height="10" viewBox="0 0 20 10" fill="none"><rect x="0.5" y="0.5" width="16" height="9" rx="2" stroke="#0f172a" stroke-opacity="0.4"/><rect x="1.5" y="1.5" width="12" height="7" rx="1.5" fill="#0f172a"/><path d="M17.5 3.5v3a1.5 1.5 0 000-3z" fill="#0f172a" opacity="0.4"/></svg>
+                            </div>
                         </div>
-                        <div class="hero-card-status">Tersedia</div>
-                    </div>
-                    <div class="hero-card-bike-img">
-                        <img src="beat-led.jpg" alt="Honda Beat LED"
-                             onerror="this.style.display='none'; this.nextElementSibling && (this.nextElementSibling.style.display='grid')">
-                    </div>
-                    <div class="hero-card-footer">
-                        <div>
-                            <div class="hero-card-label">Sewa per hari</div>
-                            <div class="hero-card-price">Rp 100K<span class="hero-card-price-unit">/24j</span></div>
+
+                        <!-- Mini Nav -->
+                        <div class="phone-nav">
+                            <div class="phone-logo-mini">
+                                <div class="phone-logo-dot">🏍</div>
+                                <span>Rental ASA</span>
+                            </div>
+                            <div class="phone-btn-mini">Booking</div>
                         </div>
+
+                        <!-- Phone Content -->
+                        <div class="phone-content">
+                            <!-- Hero area dark -->
+                            <div class="phone-hero-area">
+                                <div class="phone-eyebrow">Sewa Motor · Sentani Jayapura</div>
+                                <div class="phone-heading">Cepat,<br>Terpercaya.</div>
+                            </div>
+
+                            <!-- Featured bike card -->
+                            <div class="phone-bike">
+                                <img class="phone-bike-img" src="beat-led.jpg" alt="Honda Beat LED"
+                                     onerror="this.style.background='#1e293b'">
+                                <div class="phone-bike-body">
+                                    <div class="phone-bike-brand">Honda</div>
+                                    <div class="phone-bike-name">Beat LED — Bestseller</div>
+                                    <div class="phone-bike-row">
+                                        <div class="phone-bike-price">Rp 100K<span>/hari</span></div>
+                                        <div class="phone-wa-btn">
+                                            <svg width="9" height="9" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.862L.057 23.657a.5.5 0 00.614.61l5.913-1.557A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.89 0-3.66-.524-5.176-1.432l-.369-.22-3.832 1.009 1.026-3.738-.24-.383A9.964 9.964 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+                                            Booking WA
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Stats -->
+                            <div class="phone-stats">
+                                <div class="phone-stat">
+                                    <span class="phone-stat-num">4.4★</span>
+                                    <span class="phone-stat-label">Rating</span>
+                                </div>
+                                <div class="phone-stat">
+                                    <span class="phone-stat-num">4</span>
+                                    <span class="phone-stat-label">Unit</span>
+                                </div>
+                                <div class="phone-stat">
+                                    <span class="phone-stat-num">100K</span>
+                                    <span class="phone-stat-label">per hari</span>
+                                </div>
+                                <div class="phone-stat">
+                                    <span class="phone-stat-num">14h</span>
+                                    <span class="phone-stat-label">Buka</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Home indicator -->
+                        <div class="phone-indicator"></div>
                     </div>
                 </div>
 
+                <!-- Floating glassmorphism cards -->
                 <div class="hero-float hero-float-1">
                     <div class="hero-float-icon">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                     </div>
                     <span>KTP Saja, Aman</span>
                 </div>
 
                 <div class="hero-float hero-float-2">
                     <div class="hero-float-icon">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     </div>
                     <span>Buka 06.00 – 20.00</span>
                 </div>
