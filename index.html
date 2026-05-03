@@ -206,6 +206,16 @@
             letter-spacing: -0.025em;
             color: var(--text-heading);
         }
+        /* Two-tone gradient pada highlight kata di section title */
+        .text-grad {
+            background: linear-gradient(135deg, #2563EB 0%, #6366F1 50%, #8B5CF6 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            animation: gradientShimmer 8s ease-in-out infinite;
+        }
         .lead {
             font-family: var(--font-body);
             font-size: clamp(16px, 2vw, 19px);
@@ -393,18 +403,53 @@
         }
         .hero-content > * + * { margin-top: 22px; }
         .hero-trust {
+            position: relative;
             display: inline-flex;
             align-items: center;
             gap: 12px;
             background: var(--white);
             padding: 8px 14px 8px 8px;
             border-radius: var(--r-full);
-            border: 1px solid var(--navy-200);
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 4px 16px -4px rgba(15,23,42,0.08);
             font-family: var(--font-body);
             font-size: 14px;
             color: var(--text-body);
             font-weight: 500;
+            isolation: isolate;
+        }
+        /* Animated rainbow conic gradient border */
+        .hero-trust::before {
+            content: '';
+            position: absolute;
+            inset: -1.5px;
+            border-radius: inherit;
+            padding: 1.5px;
+            background: conic-gradient(from var(--rainbow-angle, 0deg),
+                #2563EB, #8B5CF6, #EC4899, #F59E0B, #10B981, #2563EB);
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: rainbowSpin 6s linear infinite;
+            z-index: -1;
+        }
+        @property --rainbow-angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+        @keyframes rainbowSpin {
+            to { --rainbow-angle: 360deg; }
+        }
+        /* Fallback untuk browser yang tidak support @property */
+        @supports not (background: conic-gradient(from 0deg, red, blue)) {
+            .hero-trust::before {
+                background: linear-gradient(135deg, #2563EB, #8B5CF6, #EC4899);
+                animation: none;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-trust::before { animation: none; }
         }
         .hero-trust .stars {
             background: var(--amber-100);
@@ -458,6 +503,72 @@
             color: var(--text-muted);
             font-weight: 500;
             letter-spacing: 0.01em;
+        }
+
+        /* ============================================================
+           SCROLL INDICATOR (mouse wheel di bawah hero)
+        ============================================================ */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            opacity: 0;
+            animation: scrollIndicatorFadeIn 0.8s var(--ease-out) 1.5s forwards;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .scroll-mouse {
+            width: 22px;
+            height: 36px;
+            border: 1.5px solid currentColor;
+            border-radius: 12px;
+            position: relative;
+            opacity: 0.8;
+        }
+        .scroll-wheel {
+            width: 2.5px;
+            height: 6px;
+            background: currentColor;
+            border-radius: 2px;
+            position: absolute;
+            top: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: scrollWheelDown 1.8s ease-in-out infinite;
+        }
+        .scroll-text {
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            opacity: 0.6;
+        }
+        @keyframes scrollWheelDown {
+            0%   { transform: translate(-50%, 0);   opacity: 1; }
+            50%  { transform: translate(-50%, 10px); opacity: 0.3; }
+            100% { transform: translate(-50%, 0);   opacity: 1; }
+        }
+        @keyframes scrollIndicatorFadeIn {
+            to { opacity: 1; }
+        }
+        /* Hide saat user sudah scroll */
+        body.scrolled .scroll-indicator {
+            opacity: 0 !important;
+            transform: translateX(-50%) translateY(10px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        @media (max-width: 767px) {
+            .scroll-indicator { display: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .scroll-wheel { animation: none; }
         }
 
         /* ============================================================
@@ -1136,6 +1247,25 @@
         ============================================================ */
         .steps-section {
             background: var(--navy-50);
+            background-image:
+                radial-gradient(circle at center, rgba(99,102,241,0.18) 1px, transparent 1.5px);
+            background-size: 28px 28px;
+            position: relative;
+            overflow: hidden;
+        }
+        .steps-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 700px 400px at 80% 0%, rgba(99,102,241,0.12), transparent 70%),
+                radial-gradient(ellipse 600px 400px at 20% 100%, rgba(16,185,129,0.10), transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .steps-section > .container {
+            position: relative;
+            z-index: 1;
         }
         .steps-grid {
             display: grid;
@@ -1193,32 +1323,100 @@
         /* ============================================================
            TESTIMONIALS
         ============================================================ */
+        /* Carousel container — horizontal scroll snap editorial style */
+        .reviews-wrapper {
+            position: relative;
+        }
         .reviews-grid {
-            display: grid;
-            grid-template-columns: 1fr;
+            display: flex;
             gap: 20px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding: 8px 4px 24px;
+            margin: 0 -4px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
-        @media (min-width: 768px) {
-            .reviews-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (min-width: 1024px) {
-            .reviews-grid { grid-template-columns: repeat(4, 1fr); gap: 24px; }
-        }
+        .reviews-grid::-webkit-scrollbar { display: none; }
 
         .review-card {
             background: var(--white);
             border: 1px solid var(--navy-200);
             border-radius: var(--r-xl);
-            padding: 24px;
+            padding: 28px 24px;
             display: flex;
             flex-direction: column;
             gap: 16px;
             transition: transform 0.3s var(--ease-out), box-shadow 0.3s, border-color 0.3s;
+            scroll-snap-align: start;
+            flex: 0 0 calc(85% - 10px);
+        }
+        @media (min-width: 640px) {
+            .review-card { flex: 0 0 calc(50% - 10px); }
+        }
+        @media (min-width: 1024px) {
+            .review-card { flex: 0 0 calc(33.333% - 14px); }
         }
         .review-card:hover {
             transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--navy-300);
+            box-shadow: 0 16px 40px -8px rgba(15,23,42,0.15);
+            border-color: var(--blue-300);
+        }
+
+        /* Carousel arrows */
+        .reviews-nav {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .reviews-arrow {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1.5px solid var(--navy-200);
+            background: var(--white);
+            color: var(--text-heading);
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: all 0.2s var(--ease-out);
+            box-shadow: 0 2px 8px -2px rgba(15,23,42,0.08);
+        }
+        .reviews-arrow:hover {
+            border-color: var(--blue-500);
+            color: var(--blue-600);
+            background: var(--blue-50);
+            transform: translateY(-1px);
+        }
+        .reviews-arrow:active { transform: translateY(0); }
+        .reviews-arrow:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .reviews-arrow svg { width: 20px; height: 20px; }
+        .reviews-progress {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 16px;
+        }
+        .reviews-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--navy-300);
+            transition: all 0.3s var(--ease-out);
+            cursor: pointer;
+            border: none;
+            padding: 0;
+        }
+        .reviews-dot.active {
+            background: var(--blue-600);
+            width: 24px;
+            border-radius: 3px;
         }
         .review-stars {
             display: flex;
@@ -1936,6 +2134,14 @@
                 </div>
             </div>
         </div>
+
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator" aria-hidden="true">
+            <div class="scroll-mouse">
+                <div class="scroll-wheel"></div>
+            </div>
+            <span class="scroll-text">Scroll</span>
+        </div>
     </section>
 
     <!-- ============================================================
@@ -1946,7 +2152,7 @@
         <div class="container">
             <div class="section-header">
                 <div class="eyebrow" data-reveal>🏍️ Pilihan Motor</div>
-                <h2 class="h-section" data-reveal data-reveal-delay="1">Pilih Motor yang Cocok untukmu</h2>
+                <h2 class="h-section" data-reveal data-reveal-delay="1">Pilih Motor yang <span class="text-grad">Cocok untukmu</span></h2>
                 <p class="lead" style="margin: 0 auto;" data-reveal data-reveal-delay="2">
                     Semua motor terawat, BBM siap pakai, helm gratis 1 buah. Harga sama untuk semua unit.
                 </p>
@@ -2104,7 +2310,7 @@
         <div class="container">
             <div class="section-header">
                 <div class="eyebrow" data-reveal>✨ Kenapa Pilih Kami</div>
-                <h2 class="h-section" data-reveal data-reveal-delay="1">Pengalaman Sewa Motor Tanpa Ribet</h2>
+                <h2 class="h-section" data-reveal data-reveal-delay="1">Pengalaman Sewa Motor <span class="text-grad">Tanpa Ribet</span></h2>
                 <p class="lead" style="margin: 0 auto;" data-reveal data-reveal-delay="2">
                     Lokasi strategis, harga jelas, syarat ringan. Booking lewat WhatsApp dalam hitungan menit.
                 </p>
@@ -2161,7 +2367,7 @@
         <div class="container">
             <div class="section-header">
                 <div class="eyebrow" data-reveal>📋 Cara Sewa</div>
-                <h2 class="h-section" data-reveal data-reveal-delay="1">3 Langkah Mudah, Motor Langsung Siap</h2>
+                <h2 class="h-section" data-reveal data-reveal-delay="1">3 Langkah Mudah, <span class="text-grad">Motor Langsung Siap</span></h2>
                 <p class="lead" style="margin: 0 auto;" data-reveal data-reveal-delay="2">
                     Tidak ada proses berbelit. Hubungi via WhatsApp, datang ke lokasi, langsung berkendara.
                 </p>
@@ -2196,13 +2402,14 @@
         <div class="container">
             <div class="section-header">
                 <div class="eyebrow" data-reveal>💬 Ulasan Pelanggan</div>
-                <h2 class="h-section" data-reveal data-reveal-delay="1">Apa Kata Mereka yang Sudah Sewa</h2>
+                <h2 class="h-section" data-reveal data-reveal-delay="1">Apa Kata Mereka yang <span class="text-grad">Sudah Sewa</span></h2>
                 <p class="lead" style="margin: 0 auto;" data-reveal data-reveal-delay="2">
                     Ulasan asli dari Google Maps. Rating <strong style="color: var(--navy-900);">4.4 dari 5</strong> bintang dengan 30+ review.
                 </p>
             </div>
 
-            <div class="reviews-grid">
+            <div class="reviews-wrapper">
+            <div class="reviews-grid" id="reviewsGrid">
                 <div class="review-card" data-reveal>
                     <div class="review-stars">★ ★ ★ ★ ★</div>
                     <p class="review-text">"Pas dekat jalan utama, menyediakan berbagai macam kendaraan sewa roda 2."</p>
@@ -2251,6 +2458,17 @@
                     </div>
                 </div>
             </div>
+
+            <div class="reviews-nav">
+                <button class="reviews-arrow" id="reviewsPrev" aria-label="Review sebelumnya">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <button class="reviews-arrow" id="reviewsNext" aria-label="Review berikutnya">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+            </div>
+            <div class="reviews-progress" id="reviewsProgress" aria-hidden="true"></div>
+            </div>
         </div>
     </section>
 
@@ -2294,7 +2512,7 @@
         <div class="container">
             <div class="section-header" data-reveal>
                 <div class="eyebrow">📍 Temukan Kami</div>
-                <h2 class="h-section">Lokasi Rental Motor ASA</h2>
+                <h2 class="h-section">Lokasi <span class="text-grad">Rental Motor ASA</span></h2>
                 <p class="lead" style="margin: 0 auto;">
                     Jln. Raya Sentani Pojok, Sentani Kota, Kab. Jayapura, Papua 99352
                 </p>
@@ -2393,6 +2611,9 @@
             // Sticky CTA bar — muncul setelah scroll 1.5x viewport
             const stickyCta = document.getElementById('stickyCta');
             if (stickyCta) stickyCta.classList.toggle('show', window.scrollY > window.innerHeight * 1.5);
+
+            // Hide scroll indicator setelah user scroll
+            document.body.classList.toggle('scrolled', window.scrollY > 80);
         };
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
@@ -2440,6 +2661,54 @@
         }, { threshold: 0.4 });
 
         document.querySelectorAll('[data-count-to]').forEach(el => countObserver.observe(el));
+
+        // Reviews carousel — scroll snap dengan navigation arrows + dots
+        const reviewsGrid = document.getElementById('reviewsGrid');
+        const reviewsPrev = document.getElementById('reviewsPrev');
+        const reviewsNext = document.getElementById('reviewsNext');
+        const reviewsProgress = document.getElementById('reviewsProgress');
+        if (reviewsGrid && reviewsPrev && reviewsNext) {
+            const cards = reviewsGrid.querySelectorAll('.review-card');
+            const scrollByAmount = () => {
+                const card = cards[0];
+                if (!card) return 300;
+                return card.offsetWidth + 20; // card width + gap
+            };
+
+            // Build progress dots (1 per card)
+            cards.forEach((_, i) => {
+                const dot = document.createElement('button');
+                dot.className = 'reviews-dot';
+                dot.setAttribute('aria-label', `Lihat review ${i + 1}`);
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    reviewsGrid.scrollTo({ left: scrollByAmount() * i, behavior: 'smooth' });
+                });
+                reviewsProgress.appendChild(dot);
+            });
+
+            const updateState = () => {
+                const scrollLeft = reviewsGrid.scrollLeft;
+                const maxScroll = reviewsGrid.scrollWidth - reviewsGrid.clientWidth;
+                reviewsPrev.disabled = scrollLeft <= 4;
+                reviewsNext.disabled = scrollLeft >= maxScroll - 4;
+                // Update active dot
+                const activeIdx = Math.round(scrollLeft / scrollByAmount());
+                document.querySelectorAll('.reviews-dot').forEach((d, i) => {
+                    d.classList.toggle('active', i === activeIdx);
+                });
+            };
+
+            reviewsPrev.addEventListener('click', () => {
+                reviewsGrid.scrollBy({ left: -scrollByAmount(), behavior: 'smooth' });
+            });
+            reviewsNext.addEventListener('click', () => {
+                reviewsGrid.scrollBy({ left: scrollByAmount(), behavior: 'smooth' });
+            });
+            reviewsGrid.addEventListener('scroll', updateState, { passive: true });
+            window.addEventListener('resize', updateState);
+            updateState();
+        }
 
         // Live activity toast — sosial proof rotator
         const liveToast = document.getElementById('liveToast');
