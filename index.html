@@ -182,12 +182,21 @@
             color: var(--text-heading);
         }
         .h-display .accent {
-            background: linear-gradient(135deg, #2563EB 0%, #6366F1 50%, #8B5CF6 100%);
+            background: linear-gradient(135deg, #2563EB 0%, #6366F1 25%, #8B5CF6 50%, #6366F1 75%, #2563EB 100%);
+            background-size: 200% 200%;
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 700;
             display: inline-block;
+            animation: gradientShimmer 6s ease-in-out infinite;
+        }
+        @keyframes gradientShimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50%      { background-position: 100% 50%; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .h-display .accent { animation: none; }
         }
         .h-section {
             font-family: var(--font-heading);
@@ -504,9 +513,22 @@
             overflow: hidden;
             transform: perspective(1200px) rotateY(-12deg) rotateX(4deg);
             transition: transform 0.6s var(--ease-out);
+            animation: phoneFloat 5.5s ease-in-out infinite;
+        }
+        @keyframes phoneFloat {
+            0%, 100% {
+                transform: perspective(1200px) rotateY(-12deg) rotateX(4deg) translateY(0px);
+            }
+            50% {
+                transform: perspective(1200px) rotateY(-12deg) rotateX(4deg) translateY(-12px);
+            }
         }
         .phone-frame:hover {
-            transform: perspective(1200px) rotateY(-6deg) rotateX(2deg) translateY(-4px);
+            animation-play-state: paused;
+            transform: perspective(1200px) rotateY(-6deg) rotateX(2deg) translateY(-6px);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .phone-frame { animation: none; }
         }
         @media (min-width: 1024px) {
             .phone-frame {
@@ -882,14 +904,34 @@
             border: 1px solid var(--navy-200);
             border-radius: var(--r-xl);
             overflow: hidden;
-            transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out), border-color 0.3s;
+            transition: transform 0.5s var(--ease-out), box-shadow 0.4s var(--ease-out), border-color 0.3s;
             display: flex;
             flex-direction: column;
+            transform-style: preserve-3d;
+            will-change: transform;
+            position: relative;
         }
         .bike-card:hover {
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-xl);
-            border-color: var(--navy-300);
+            box-shadow: 0 20px 60px -10px rgba(15,23,42,0.25),
+                        0 0 0 1px rgba(37,99,235,0.1);
+            border-color: var(--blue-300);
+        }
+        /* Glow yg muncul saat hover */
+        .bike-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--r-xl);
+            background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                                        rgba(37,99,235,0.08), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .bike-card:hover::after { opacity: 1; }
+        @media (prefers-reduced-motion: reduce) {
+            .bike-card { transition: none !important; transform: none !important; }
         }
         .bike-image {
             position: relative;
@@ -1364,6 +1406,203 @@
         }
 
         /* ============================================================
+           LIVE ACTIVITY TOAST — sosial proof popup
+        ============================================================ */
+        .live-toast {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 55;
+            background: var(--white);
+            border: 1px solid var(--navy-200);
+            border-radius: 14px;
+            box-shadow: 0 12px 32px -8px rgba(15,23,42,0.18),
+                        0 0 0 1px rgba(15,23,42,0.04);
+            padding: 12px 16px 12px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 320px;
+            font-family: var(--font-body);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+            pointer-events: none;
+        }
+        .live-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .live-toast-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue-500), var(--blue-700));
+            color: var(--white);
+            display: grid;
+            place-items: center;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .live-toast-text {
+            font-size: 13px;
+            line-height: 1.4;
+            color: var(--text-body);
+        }
+        .live-toast-text strong {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: var(--text-heading);
+        }
+        .live-toast-time {
+            display: block;
+            font-size: 11.5px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        .live-toast-pulse {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--emerald-500);
+            box-shadow: 0 0 0 3px rgba(16,185,129,0.2);
+            animation: livePulse 1.6s ease-in-out infinite;
+        }
+        @keyframes livePulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
+            60%      { box-shadow: 0 0 0 8px rgba(16,185,129,0); }
+        }
+        @media (max-width: 640px) {
+            .live-toast {
+                left: 12px;
+                right: 12px;
+                bottom: 80px; /* hindari overlap dengan WA fab */
+                max-width: none;
+            }
+        }
+
+        /* ============================================================
+           SECTION DIVIDERS — dot grid & gradient line
+        ============================================================ */
+        .section-divider {
+            position: relative;
+            padding: 32px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+            opacity: 0.55;
+        }
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            max-width: 120px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--navy-300), transparent);
+        }
+        .section-divider-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--blue-500);
+            box-shadow: 0 0 0 4px rgba(37,99,235,0.1);
+        }
+        .section-divider-dot:nth-child(2) {
+            background: var(--blue-600);
+            transform: scale(1.2);
+            box-shadow: 0 0 0 6px rgba(99,102,241,0.12);
+        }
+        @media (prefers-reduced-motion: no-preference) {
+            .section-divider-dot {
+                animation: dotPulse 2.4s ease-in-out infinite;
+            }
+            .section-divider-dot:nth-child(3) { animation-delay: 0.3s; }
+            .section-divider-dot:nth-child(4) { animation-delay: 0.6s; }
+            @keyframes dotPulse {
+                0%, 100% { opacity: 0.6; transform: scale(1); }
+                50%      { opacity: 1;   transform: scale(1.3); }
+            }
+            .section-divider-dot:nth-child(2) {
+                animation: dotPulseLg 2.4s ease-in-out infinite;
+                animation-delay: 0.15s;
+            }
+            @keyframes dotPulseLg {
+                0%, 100% { opacity: 0.7; transform: scale(1.2); }
+                50%      { opacity: 1;   transform: scale(1.5); }
+            }
+        }
+
+        /* ============================================================
+           STICKY CTA BAR (muncul setelah scroll jauh)
+        ============================================================ */
+        .sticky-cta {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 55;
+            background: linear-gradient(135deg, #2563EB 0%, #6366F1 50%, #8B5CF6 100%);
+            color: var(--white);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            font-family: var(--font-body);
+            font-size: 13.5px;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            transform: translateY(-100%);
+            transition: transform 0.4s var(--ease-out);
+            box-shadow: 0 4px 20px -4px rgba(37,99,235,0.35);
+        }
+        .sticky-cta.show {
+            transform: translateY(0);
+        }
+        .sticky-cta-text {
+            display: none;
+        }
+        @media (min-width: 640px) {
+            .sticky-cta-text { display: inline; }
+        }
+        .sticky-cta-text strong {
+            font-weight: 700;
+            font-family: var(--font-heading);
+        }
+        .sticky-cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--white);
+            color: var(--blue-700);
+            padding: 7px 16px;
+            border-radius: var(--r-full);
+            font-weight: 600;
+            font-size: 13px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            white-space: nowrap;
+        }
+        .sticky-cta-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px -4px rgba(0,0,0,0.2);
+        }
+        body.has-sticky-cta {
+            padding-top: 0;
+        }
+        .sticky-cta.show ~ .nav,
+        body:has(.sticky-cta.show) .nav {
+            top: 42px;
+            transition: top 0.4s var(--ease-out);
+        }
+
+        /* ============================================================
            MAPS SECTION
         ============================================================ */
         .maps-section {
@@ -1504,6 +1743,18 @@
     </svg>
 
     <!-- ============================================================
+         STICKY CTA BAR
+    ============================================================ -->
+    <div class="sticky-cta" id="stickyCta" role="region" aria-label="Penawaran Booking">
+        <span class="sticky-cta-text">⚡ Sewa motor mulai <strong>Rp 100K/hari</strong> — slot terbatas hari ini!</span>
+        <a href="https://wa.me/6281344712297?text=Halo%20Rental%20Motor%20Asa,%20saya%20ingin%20menyewa%20motor"
+           target="_blank" rel="noopener" class="sticky-cta-btn">
+            Booking Sekarang
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+    </div>
+
+    <!-- ============================================================
          NAVIGATION
     ============================================================ -->
     <nav class="nav" id="nav">
@@ -1569,19 +1820,19 @@
 
                 <div class="hero-meta" data-reveal data-reveal-delay="4">
                     <div class="hero-meta-item">
-                        <span class="hero-meta-num">4</span>
+                        <span class="hero-meta-num" data-count-to="4" data-count-suffix="">0</span>
                         <span class="hero-meta-label">Unit Tersedia</span>
                     </div>
                     <div class="hero-meta-item">
-                        <span class="hero-meta-num"><span aria-label="Seratus ribu rupiah">100K</span></span>
+                        <span class="hero-meta-num" data-count-to="100" data-count-suffix="K" aria-label="Seratus ribu rupiah">0</span>
                         <span class="hero-meta-label">per 24 jam</span>
                     </div>
                     <div class="hero-meta-item">
-                        <span class="hero-meta-num"><span aria-label="14 jam">14h</span></span>
+                        <span class="hero-meta-num" data-count-to="14" data-count-suffix="h" aria-label="14 jam">0</span>
                         <span class="hero-meta-label">Buka tiap hari</span>
                     </div>
                     <div class="hero-meta-item">
-                        <span class="hero-meta-num"><span aria-label="4.4 bintang">4.4★</span></span>
+                        <span class="hero-meta-num" data-count-to="4.4" data-count-decimals="1" data-count-suffix="★" aria-label="4.4 bintang">0</span>
                         <span class="hero-meta-label">Rating Google</span>
                     </div>
                 </div>
@@ -1837,6 +2088,14 @@
         </div>
     </section>
 
+    <div class="container">
+        <div class="section-divider" aria-hidden="true">
+            <span class="section-divider-dot"></span>
+            <span class="section-divider-dot"></span>
+            <span class="section-divider-dot"></span>
+        </div>
+    </div>
+
     <!-- ============================================================
          KEY ADVANTAGES
     ============================================================ -->
@@ -1995,6 +2254,14 @@
         </div>
     </section>
 
+    <div class="container">
+        <div class="section-divider" aria-hidden="true">
+            <span class="section-divider-dot"></span>
+            <span class="section-divider-dot"></span>
+            <span class="section-divider-dot"></span>
+        </div>
+    </div>
+
     <!-- ============================================================
          FINAL CTA
     ============================================================ -->
@@ -2092,6 +2359,18 @@
     </footer>
 
     <!-- ============================================================
+         LIVE ACTIVITY TOAST (rotator sosial proof)
+    ============================================================ -->
+    <div class="live-toast" id="liveToast" role="status" aria-live="polite" aria-atomic="true">
+        <div class="live-toast-avatar" id="liveAvatar">A</div>
+        <div class="live-toast-text">
+            <span id="liveText"><strong>Andi</strong> baru booking <strong>Beat LED</strong></span>
+            <span class="live-toast-time" id="liveTime">5 menit lalu</span>
+        </div>
+        <span class="live-toast-pulse" aria-hidden="true"></span>
+    </div>
+
+    <!-- ============================================================
          FLOATING WHATSAPP BUTTON
     ============================================================ -->
     <a href="https://wa.me/6281344712297?text=Halo%20Rental%20Motor%20Asa,%20saya%20ingin%20menyewa%20motor"
@@ -2110,6 +2389,10 @@
             // Floating WA visibility
             const wa = document.getElementById('floatWa');
             if (wa) wa.classList.toggle('show', window.scrollY > window.innerHeight * 0.5);
+
+            // Sticky CTA bar — muncul setelah scroll 1.5x viewport
+            const stickyCta = document.getElementById('stickyCta');
+            if (stickyCta) stickyCta.classList.toggle('show', window.scrollY > window.innerHeight * 1.5);
         };
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
@@ -2125,6 +2408,119 @@
         }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 
         document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+
+        // Number count-up animation untuk hero stats
+        const countUp = (el) => {
+            const target = parseFloat(el.dataset.countTo);
+            const decimals = parseInt(el.dataset.countDecimals || '0', 10);
+            const suffix = el.dataset.countSuffix || '';
+            const duration = 1400; // ms
+            const start = performance.now();
+            const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+
+            const tick = (now) => {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = easeOut(progress);
+                const value = (target * eased).toFixed(decimals);
+                el.textContent = value + suffix;
+                if (progress < 1) requestAnimationFrame(tick);
+                else el.textContent = target.toFixed(decimals) + suffix;
+            };
+            requestAnimationFrame(tick);
+        };
+
+        const countObserver = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    countUp(e.target);
+                    countObserver.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.4 });
+
+        document.querySelectorAll('[data-count-to]').forEach(el => countObserver.observe(el));
+
+        // Live activity toast — sosial proof rotator
+        const liveToast = document.getElementById('liveToast');
+        if (liveToast) {
+            const activities = [
+                { name: 'Andi', motor: 'Beat LED', time: 'baru saja' },
+                { name: 'Dewi', motor: 'Mio M3',   time: '3 menit lalu' },
+                { name: 'Rian', motor: 'Beat FI',  time: '8 menit lalu' },
+                { name: 'Putri', motor: 'Beat Street', time: '12 menit lalu' },
+                { name: 'Yosua', motor: 'Beat LED', time: '18 menit lalu' },
+                { name: 'Maria', motor: 'Mio M3',   time: '24 menit lalu' },
+                { name: 'Eko',   motor: 'Beat FI',  time: '32 menit lalu' },
+            ];
+            let idx = 0;
+
+            const showToast = () => {
+                const a = activities[idx % activities.length];
+                document.getElementById('liveAvatar').textContent = a.name.charAt(0);
+                document.getElementById('liveText').innerHTML = `<strong>${a.name}</strong> baru booking <strong>${a.motor}</strong>`;
+                document.getElementById('liveTime').textContent = a.time;
+                liveToast.classList.add('show');
+                setTimeout(() => liveToast.classList.remove('show'), 5000);
+                idx++;
+            };
+
+            // Pertama kali muncul setelah 8 detik (saat user udah lihat hero)
+            setTimeout(() => {
+                showToast();
+                // Lalu rotasi tiap 12 detik (5s show + 7s gap)
+                setInterval(showToast, 12000);
+            }, 8000);
+        }
+
+        // Magnetic button effect (Booking Sekarang + CTA Final)
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!prefersReducedMotion) {
+            document.querySelectorAll('.btn-accent, .btn-primary, .btn-wa.btn-lg').forEach(btn => {
+                let rafBtn = null;
+                btn.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+                btn.addEventListener('mousemove', (e) => {
+                    if (rafBtn) cancelAnimationFrame(rafBtn);
+                    rafBtn = requestAnimationFrame(() => {
+                        const rect = btn.getBoundingClientRect();
+                        const x = e.clientX - rect.left - rect.width / 2;
+                        const y = e.clientY - rect.top - rect.height / 2;
+                        const strength = 0.3; // 30% dari jarak cursor ke center
+                        btn.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
+                    });
+                });
+                btn.addEventListener('mouseleave', () => {
+                    if (rafBtn) cancelAnimationFrame(rafBtn);
+                    btn.style.transform = '';
+                });
+            });
+        }
+
+        // 3D tilt + mouse-tracking glow untuk bike cards
+        if (!prefersReducedMotion) {
+            document.querySelectorAll('.bike-card').forEach(card => {
+                let rafId = null;
+                card.addEventListener('mousemove', (e) => {
+                    if (rafId) cancelAnimationFrame(rafId);
+                    rafId = requestAnimationFrame(() => {
+                        const rect = card.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        const cx = rect.width / 2;
+                        const cy = rect.height / 2;
+                        const rotateY = ((x - cx) / cx) * 6; // max 6deg
+                        const rotateX = -((y - cy) / cy) * 6;
+                        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px) scale(1.01)`;
+                        card.style.setProperty('--mouse-x', `${x}px`);
+                        card.style.setProperty('--mouse-y', `${y}px`);
+                    });
+                });
+                card.addEventListener('mouseleave', () => {
+                    if (rafId) cancelAnimationFrame(rafId);
+                    card.style.transform = '';
+                });
+            });
+        }
     </script>
 </body>
 </html>
