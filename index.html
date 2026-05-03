@@ -30,7 +30,12 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- GSAP + ScrollTrigger untuk scroll-driven animation premium -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
 
     <script type="application/ld+json">
     {
@@ -180,6 +185,20 @@
             letter-spacing: -0.03em;
             color: var(--text-heading);
         }
+        /* Split words wrapper untuk GSAP reveal */
+        .word-wrap {
+            display: inline-block;
+            overflow: hidden;
+            vertical-align: top;
+            line-height: 1.1;
+        }
+        .word {
+            display: inline-block;
+            transform: translateY(110%);
+            will-change: transform;
+        }
+        /* Fallback kalau GSAP gagal load — tampil normal */
+        .no-gsap .word { transform: none; }
         .h-display .accent {
             background: linear-gradient(135deg, #2563EB 0%, #6366F1 25%, #8B5CF6 50%, #6366F1 75%, #2563EB 100%);
             background-size: 200% 200%;
@@ -1971,7 +1990,7 @@
                     <span>30+ ulasan pelanggan terverifikasi</span>
                 </div>
 
-                <h1 class="h-display" data-reveal data-reveal-delay="1">
+                <h1 class="h-display" data-gsap-split>
                     Sewa Motor di Sentani <br>
                     <span class="accent">Cepat, Aman, Terpercaya.</span>
                 </h1>
@@ -2769,6 +2788,236 @@
                     card.style.transform = '';
                 });
             });
+        }
+    </script>
+
+    <!-- ============================================================
+         GSAP + ScrollTrigger — scroll-driven storytelling premium
+    ============================================================ -->
+    <script>
+        const initGsap = () => {
+            if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+                document.body.classList.add('no-gsap');
+                console.warn('[GSAP] Library tidak load — fallback ke CSS animation');
+                return;
+            }
+
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reduceMotion) {
+                console.log('[GSAP] Reduced motion preferred — skip GSAP animations');
+                return;
+            }
+
+            gsap.registerPlugin(ScrollTrigger);
+
+            // ============================================================
+            // #1 Hero headline split text reveal — kata per kata stagger
+            // ============================================================
+            const splitHeadline = (el) => {
+                if (!el) return;
+                // Walker: split text nodes only, preserve <br> dan <span class="accent">
+                const splitTextNode = (node) => {
+                    const words = node.textContent.split(/(\s+)/);
+                    const frag = document.createDocumentFragment();
+                    words.forEach(w => {
+                        if (w.trim() === '') {
+                            frag.appendChild(document.createTextNode(w));
+                        } else {
+                            const wrap = document.createElement('span');
+                            wrap.className = 'word-wrap';
+                            const word = document.createElement('span');
+                            word.className = 'word';
+                            word.textContent = w;
+                            wrap.appendChild(word);
+                            frag.appendChild(wrap);
+                        }
+                    });
+                    return frag;
+                };
+
+                const walk = (parent) => {
+                    Array.from(parent.childNodes).forEach(node => {
+                        if (node.nodeType === Node.TEXT_NODE) {
+                            if (node.textContent.trim()) {
+                                parent.replaceChild(splitTextNode(node), node);
+                            }
+                        } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'BR') {
+                            // Skip .accent — gradient text break kalau split
+                            if (node.classList && node.classList.contains('accent')) {
+                                // Treat .accent sebagai single word unit
+                                const wrap = document.createElement('span');
+                                wrap.className = 'word-wrap';
+                                const word = document.createElement('span');
+                                word.className = 'word';
+                                // Pindahkan accent ke dalam word
+                                node.parentNode.insertBefore(wrap, node);
+                                word.appendChild(node);
+                                wrap.appendChild(word);
+                                return; // Don't recurse into accent
+                            }
+                            walk(node);
+                        }
+                    });
+                };
+
+                walk(el);
+
+                // Animate semua .word element
+                gsap.to(el.querySelectorAll('.word'), {
+                    y: '0%',
+                    duration: 0.9,
+                    ease: 'power3.out',
+                    stagger: 0.06,
+                    delay: 0.2
+                });
+            };
+            splitHeadline(document.querySelector('[data-gsap-split]'));
+
+            // ============================================================
+            // #2 Hero blob parallax scroll — bergerak slow saat scroll
+            // ============================================================
+            gsap.utils.toArray('.hero .blob').forEach((blob, i) => {
+                gsap.to(blob, {
+                    y: i % 2 === 0 ? -120 : 100,
+                    x: i % 2 === 0 ? 40 : -40,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: '.hero',
+                        start: 'top top',
+                        end: 'bottom top',
+                        scrub: 1.2
+                    }
+                });
+            });
+
+            // ============================================================
+            // #3 Phone mockup scroll parallax — phone glide up smooth
+            // ============================================================
+            const phoneVisual = document.querySelector('.hero-visual');
+            if (phoneVisual && window.matchMedia('(min-width: 768px)').matches) {
+                gsap.to(phoneVisual, {
+                    y: -80,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: '.hero',
+                        start: 'top top',
+                        end: 'bottom top',
+                        scrub: 1.5
+                    }
+                });
+            }
+
+            // ============================================================
+            // #4 Bike cards stagger reveal — pakai fromTo karena CSS data-reveal opacity:0 conflict
+            // ============================================================
+            gsap.fromTo('.bike-card',
+                { opacity: 0, y: 60 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: 'power2.out',
+                    stagger: 0.12,
+                    scrollTrigger: {
+                        trigger: '.bikes-grid',
+                        start: 'top 80%',
+                        once: true
+                    }
+                }
+            );
+
+            // ============================================================
+            // #5 Section titles slide-in horizontal — masuk dari kiri
+            // ============================================================
+            gsap.utils.toArray('.section-header').forEach((header) => {
+                gsap.fromTo(header.children,
+                    { opacity: 0, x: -40 },
+                    {
+                        opacity: 1,
+                        x: 0,
+                        duration: 0.7,
+                        ease: 'power3.out',
+                        stagger: 0.1,
+                        scrollTrigger: {
+                            trigger: header,
+                            start: 'top 85%',
+                            once: true
+                        }
+                    }
+                );
+            });
+
+            // ============================================================
+            // BONUS: Step cards stagger
+            // ============================================================
+            gsap.fromTo('.step-card',
+                { opacity: 0, y: 40 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.7,
+                    ease: 'power2.out',
+                    stagger: 0.15,
+                    scrollTrigger: {
+                        trigger: '.steps-grid',
+                        start: 'top 80%',
+                        once: true
+                    }
+                }
+            );
+
+            // ============================================================
+            // BONUS: Advantage cards stagger
+            // ============================================================
+            gsap.fromTo('.adv-card',
+                { opacity: 0, y: 40 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.7,
+                    ease: 'power2.out',
+                    stagger: 0.1,
+                    scrollTrigger: {
+                        trigger: '.advantages-grid',
+                        start: 'top 80%',
+                        once: true
+                    }
+                }
+            );
+
+            // Refresh ScrollTrigger setelah semua image load (avoid wrong calc)
+            if (document.readyState === 'complete') {
+                ScrollTrigger.refresh();
+            } else {
+                window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
+            }
+        };
+
+        // Run init — handle both cases (load already fired or pending)
+        const tryInit = () => {
+            if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+                initGsap();
+            } else {
+                // GSAP belum load — coba lagi tiap 50ms (max 30 attempts = 1.5s)
+                let attempts = 0;
+                const interval = setInterval(() => {
+                    attempts++;
+                    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+                        clearInterval(interval);
+                        initGsap();
+                    } else if (attempts >= 30) {
+                        clearInterval(interval);
+                        document.body.classList.add('no-gsap');
+                        console.warn('[GSAP] Timeout — fallback ke CSS');
+                    }
+                }, 50);
+            }
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', tryInit);
+        } else {
+            tryInit();
         }
     </script>
 </body>
