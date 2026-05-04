@@ -1976,7 +1976,7 @@
             position: relative;
             border-radius: 22px;
             overflow: hidden;
-            aspect-ratio: 4 / 5;
+            aspect-ratio: 4 / 3;
             cursor: pointer;
             background: var(--navy-100);
             box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
@@ -1986,10 +1986,23 @@
             display: block;
         }
 
-        .explore-card:hover,
-        .explore-card:focus-within {
-            transform: translateY(-8px);
-            box-shadow: 0 24px 48px rgba(15, 23, 42, 0.20);
+        @media (min-width: 1024px) {
+            .explore-card { aspect-ratio: 4 / 5; }
+        }
+
+        .explore-card:focus-visible {
+            outline: 3px solid var(--blue-600);
+            outline-offset: 4px;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .explore-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 24px 48px rgba(15, 23, 42, 0.20);
+            }
+            .explore-card:hover .explore-image img {
+                transform: scale(1.08);
+            }
         }
 
         .explore-image {
@@ -2004,10 +2017,6 @@
             object-fit: cover;
             transition: transform 0.7s var(--ease-soft);
             display: block;
-        }
-
-        .explore-card:hover .explore-image img {
-            transform: scale(1.08);
         }
 
         .explore-overlay {
@@ -2478,13 +2487,13 @@
     <!-- ============================================================
          EXPLORE SENTANI — Inspirasi Touring (foto AI scenic)
     ============================================================ -->
-    <section class="section explore-section" id="jelajah">
+    <section class="section explore-section" id="explore">
         <div class="blob blob-blue" style="width:500px;height:500px;top:-120px;left:-180px;opacity:0.35;"></div>
         <div class="container">
             <div class="section-header">
-                <div class="eyebrow" data-reveal>🌴 Inspirasi Touring</div>
-                <h2 class="section-heading" data-reveal data-reveal-delay="1">
-                    Jelajahi <span class="accent">Sentani</span> Tanpa Batas
+                <div class="eyebrow" data-reveal><span aria-hidden="true">🌴</span> Inspirasi Touring</div>
+                <h2 class="h-section" data-reveal data-reveal-delay="1">
+                    Jelajahi <span class="text-grad">Sentani</span> Tanpa Batas
                 </h2>
                 <p class="lead" data-reveal data-reveal-delay="2">
                     Motor kami sudah dibawa pelanggan menjelajahi tempat-tempat paling indah di Jayapura. Mau ikut menyusuri jalannya?
@@ -2493,52 +2502,60 @@
 
             <div class="explore-grid">
                 <!-- Card 1: Danau Sentani Sunset -->
-                <a href="#bikes" class="explore-card" data-reveal aria-label="Lihat motor untuk touring ke Danau Sentani">
+                <a href="https://wa.me/6281344712297?text=Halo,%20saya%20mau%20sewa%20motor%20untuk%20touring%20ke%20Danau%20Sentani."
+                   target="_blank" rel="noopener"
+                   class="explore-card" data-reveal aria-label="Booking motor via WhatsApp untuk touring ke Danau Sentani">
                     <div class="explore-image">
                         <img src="beat-led-scenic.webp" alt="Honda Beat LED parkir di tepi Danau Sentani saat sunset"
                              width="480" height="600" loading="lazy" decoding="async">
                     </div>
                     <div class="explore-overlay">
-                        <span class="explore-badge">📍 Danau Sentani</span>
+                        <span class="explore-badge"><span aria-hidden="true">📍</span> Danau Sentani</span>
                         <h3 class="explore-place">Sunset di Danau Sentani</h3>
                         <p class="explore-mood">30 menit dari shop · spot favorit foto golden hour</p>
                     </div>
                 </a>
 
                 <!-- Card 2: Jalur Pegunungan Misty -->
-                <a href="#bikes" class="explore-card" data-reveal data-reveal-delay="1" aria-label="Lihat motor untuk touring jalur pegunungan">
+                <a href="https://wa.me/6281344712297?text=Halo,%20saya%20mau%20sewa%20motor%20untuk%20jalan-jalan%20ke%20pegunungan%20Jayapura."
+                   target="_blank" rel="noopener"
+                   class="explore-card" data-reveal data-reveal-delay="1" aria-label="Booking motor via WhatsApp untuk touring jalur pegunungan">
                     <div class="explore-image">
                         <img src="beat-fi-scenic.webp" alt="Honda Beat FI di jalan pegunungan misty Jayapura"
                              width="480" height="600" loading="lazy" decoding="async">
                     </div>
                     <div class="explore-overlay">
-                        <span class="explore-badge">📍 Jalur Pegunungan</span>
+                        <span class="explore-badge"><span aria-hidden="true">📍</span> Jalur Pegunungan</span>
                         <h3 class="explore-place">Jalur Misty Jayapura</h3>
                         <p class="explore-mood">Cocok pagi hari · view dramatic, udara sejuk</p>
                     </div>
                 </a>
 
                 <!-- Card 3: Cycloop Adventure -->
-                <a href="#bikes" class="explore-card" data-reveal data-reveal-delay="2" aria-label="Lihat motor untuk adventure ke Cycloop">
+                <a href="https://wa.me/6281344712297?text=Halo,%20saya%20mau%20sewa%20motor%20untuk%20adventure%20ke%20Cycloop."
+                   target="_blank" rel="noopener"
+                   class="explore-card" data-reveal data-reveal-delay="2" aria-label="Booking motor via WhatsApp untuk adventure ke Cycloop">
                     <div class="explore-image">
                         <img src="beat-street-scenic.webp" alt="Honda Beat Street di hutan tropis Cycloop"
                              width="480" height="600" loading="lazy" decoding="async">
                     </div>
                     <div class="explore-overlay">
-                        <span class="explore-badge">📍 Cycloop Mountain</span>
+                        <span class="explore-badge"><span aria-hidden="true">📍</span> Cycloop Mountain</span>
                         <h3 class="explore-place">Hutan Tropis Cycloop</h3>
                         <p class="explore-mood">Adventure ride · cocok untuk si suka tantangan</p>
                     </div>
                 </a>
 
                 <!-- Card 4: Pusat Kota -->
-                <a href="#bikes" class="explore-card" data-reveal data-reveal-delay="3" aria-label="Lihat motor untuk keliling pusat kota">
+                <a href="https://wa.me/6281344712297?text=Halo,%20saya%20mau%20sewa%20motor%20untuk%20keliling%20pusat%20kota%20Sentani."
+                   target="_blank" rel="noopener"
+                   class="explore-card" data-reveal data-reveal-delay="3" aria-label="Booking motor via WhatsApp untuk keliling pusat kota">
                     <div class="explore-image">
                         <img src="mio-m3-scenic.webp" alt="Yamaha Mio M3 di pusat kota Sentani"
                              width="480" height="600" loading="lazy" decoding="async">
                     </div>
                     <div class="explore-overlay">
-                        <span class="explore-badge">📍 Pusat Kota</span>
+                        <span class="explore-badge"><span aria-hidden="true">📍</span> Pusat Kota</span>
                         <h3 class="explore-place">Sentani City Tour</h3>
                         <p class="explore-mood">Kuliner & shopping · santai keliling kota</p>
                     </div>
@@ -2547,7 +2564,7 @@
 
             <div class="explore-cta" data-reveal>
                 <a href="#bikes" class="btn-explore">
-                    <span>👀 Lihat Pilihan Motor</span>
+                    <span>Cek Spesifikasi &amp; Harga Motor</span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </a>
             </div>
@@ -3187,6 +3204,24 @@
                     scrollTrigger: {
                         trigger: '.bikes-grid',
                         start: 'top 80%',
+                        once: true
+                    }
+                }
+            );
+
+            // EXPLORE cards stagger reveal — konsisten dramatic flow
+            gsap.fromTo('.explore-card',
+                { opacity: 0, y: 80, scale: 0.9 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    duration: 0.85,
+                    ease: 'back.out(1.3)',
+                    stagger: 0.12,
+                    scrollTrigger: {
+                        trigger: '.explore-grid',
+                        start: 'top 82%',
                         once: true
                     }
                 }
