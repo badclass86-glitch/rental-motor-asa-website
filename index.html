@@ -736,22 +736,24 @@
             min-height: 560px;
             margin: 0 auto;
             overflow: visible;
+            width: 100%;
         }
-        /* Hide phone mockup di mobile — terlalu makan space dan numpuk */
+        /* Mobile: tampilkan Spline tapi lebih kecil */
         @media (max-width: 767px) {
             .hero-visual {
-                display: none;
+                min-height: 420px;
+                margin-top: 32px;
             }
         }
 
-        /* Glow behind phone */
+        /* Glow behind 3D stage */
         .phone-glow {
             position: absolute;
-            width: 320px;
-            height: 320px;
-            background: radial-gradient(circle, rgba(37,99,235,0.22) 0%, rgba(16,185,129,0.08) 50%, transparent 70%);
+            width: 380px;
+            height: 380px;
+            background: radial-gradient(circle, rgba(37,99,235,0.28) 0%, rgba(139,92,246,0.12) 50%, transparent 70%);
             border-radius: 50%;
-            filter: blur(48px);
+            filter: blur(56px);
             z-index: 0;
             animation: glowPulse 4s ease-in-out infinite;
         }
@@ -2231,32 +2233,30 @@
         }
 
         /* ============================================================
-           3D SHOWCASE — Spline embed dengan lazy load
+           HERO SPLINE 3D STAGE — Spline embed di hero (lazy loaded)
         ============================================================ */
-        .spline-section {
-            position: relative;
-            overflow: hidden;
-            background:
-                radial-gradient(ellipse at center, var(--surface-section-blue), transparent 65%),
-                linear-gradient(180deg, var(--surface-section-tint) 0%, var(--surface-card) 100%);
-        }
-
-        .spline-stage {
+        .hero-spline-stage {
             position: relative;
             width: 100%;
-            height: 80vh;
-            min-height: 480px;
-            max-height: 720px;
-            margin-top: 40px;
+            max-width: 480px;
+            aspect-ratio: 4 / 5;
+            margin: 0 auto;
             border-radius: var(--r-2xl);
             overflow: hidden;
-            background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
+            background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 100%);
             border: 1px solid var(--border-subtle);
-            box-shadow: var(--shadow-xl);
+            box-shadow:
+                0 30px 60px -10px rgba(15, 23, 42, 0.45),
+                0 18px 36px -8px rgba(37, 99, 235, 0.18);
             isolation: isolate;
+            z-index: 2;
         }
 
-        .spline-stage iframe {
+        @media (min-width: 1024px) {
+            .hero-spline-stage { max-width: 520px; }
+        }
+
+        .hero-spline-stage iframe {
             display: block;
             width: 100%;
             height: 100%;
@@ -2265,85 +2265,47 @@
             transition: opacity 0.6s var(--ease-soft);
         }
 
-        .spline-stage.loaded iframe {
+        .hero-spline-stage.loaded iframe {
             opacity: 1;
         }
 
-        .spline-stage.loaded .spline-placeholder {
+        .hero-spline-stage.loaded .hero-spline-placeholder {
             opacity: 0;
             pointer-events: none;
         }
 
-        .spline-placeholder {
+        .hero-spline-placeholder {
             position: absolute;
             inset: 0;
             display: grid;
             place-items: center;
             gap: 14px;
             color: rgba(255, 255, 255, 0.85);
-            font-size: 14px;
-            font-weight: 500;
             background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
             transition: opacity 0.5s var(--ease-soft);
             z-index: 1;
         }
 
-        .spline-placeholder-inner {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-        }
-
         .spline-spinner {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            border: 3px solid rgba(147, 197, 253, 0.2);
+            border: 3px solid rgba(147, 197, 253, 0.18);
             border-top-color: var(--blue-300);
             animation: splineSpinnerRotate 0.9s linear infinite;
+        }
+
+        .spline-placeholder-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            font-weight: 500;
+            margin: 0;
+            letter-spacing: 0.04em;
         }
 
         @keyframes splineSpinnerRotate {
             to { transform: rotate(360deg); }
         }
-
-        .spline-placeholder-text {
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 14px;
-            margin: 0;
-            letter-spacing: 0.02em;
-        }
-
-        .spline-hint {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px 22px;
-            margin-top: 20px;
-            padding: 0 8px;
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .spline-hint-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .spline-hint svg {
-            color: var(--blue-600);
-            flex-shrink: 0;
-        }
-
-        @media (max-width: 640px) {
-            .spline-stage { height: 60vh; min-height: 380px; }
-            .spline-hint { font-size: 12px; gap: 8px 14px; }
-        }
-
-        /* Hide Spline branding pojok kanan-bawah (tetap respect ToS untuk free tier) */
-        /* Catatan: kalau user pakai paid Spline, bisa enable bg badge custom */
 
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
@@ -2480,83 +2442,15 @@
 
             <div class="hero-visual" data-reveal data-reveal-delay="2">
 
-                <!-- Glow behind phone -->
+                <!-- Glow behind 3D stage -->
                 <div class="phone-glow"></div>
 
-                <!-- Phone Frame -->
-                <div class="phone-frame">
-                    <!-- Dynamic Island -->
-                    <div class="phone-island"></div>
-
-                    <div class="phone-screen">
-                        <!-- Status Bar -->
-                        <div class="phone-status">
-                            <span>09:41</span>
-                            <div class="phone-status-icons">
-                                <svg width="11" height="8" viewBox="0 0 11 8" fill="#0f172a"><rect x="0" y="3" width="2" height="5" rx="0.5"/><rect x="3" y="2" width="2" height="6" rx="0.5"/><rect x="6" y="1" width="2" height="7" rx="0.5"/><rect x="9" y="0" width="2" height="8" rx="0.5"/></svg>
-                                <svg width="12" height="9" viewBox="0 0 12 9" fill="none" stroke="#0f172a" stroke-width="1.5" stroke-linecap="round"><path d="M1 6.5C2.5 4.5 4.5 3.5 6 3.5S9.5 4.5 11 6.5"/><path d="M3 8.5C4 7 5 6.5 6 6.5s2 .5 3 2"/><circle cx="6" cy="9" r="0.8" fill="#0f172a" stroke="none"/></svg>
-                                <svg width="20" height="10" viewBox="0 0 20 10" fill="none"><rect x="0.5" y="0.5" width="16" height="9" rx="2" stroke="#0f172a" stroke-opacity="0.4"/><rect x="1.5" y="1.5" width="12" height="7" rx="1.5" fill="#0f172a"/><path d="M17.5 3.5v3a1.5 1.5 0 000-3z" fill="#0f172a" opacity="0.4"/></svg>
-                            </div>
-                        </div>
-
-                        <!-- Mini Nav -->
-                        <div class="phone-nav">
-                            <div class="phone-logo-mini">
-                                <div class="phone-logo-dot">🏍</div>
-                                <span>Rental ASA</span>
-                            </div>
-                            <div class="phone-btn-mini">Booking</div>
-                        </div>
-
-                        <!-- Phone Content -->
-                        <div class="phone-content">
-                            <!-- Hero area dark -->
-                            <div class="phone-hero-area">
-                                <div class="phone-eyebrow">Sewa Motor · Sentani Jayapura</div>
-                                <div class="phone-heading">Cepat,<br>Terpercaya.</div>
-                            </div>
-
-                            <!-- Featured bike card -->
-                            <div class="phone-bike">
-                                <img class="phone-bike-img" src="beat-led.jpg" alt=""
-                                     width="216" height="120" loading="lazy"
-                                     onerror="this.style.background='#1e293b'">
-                                <div class="phone-bike-body">
-                                    <div class="phone-bike-brand">Honda</div>
-                                    <div class="phone-bike-name">Beat LED — Bestseller</div>
-                                    <div class="phone-bike-row">
-                                        <div class="phone-bike-price">Rp 100K<span>/hari</span></div>
-                                        <div class="phone-wa-btn">
-                                            <svg width="9" height="9" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.862L.057 23.657a.5.5 0 00.614.61l5.913-1.557A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.89 0-3.66-.524-5.176-1.432l-.369-.22-3.832 1.009 1.026-3.738-.24-.383A9.964 9.964 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-                                            Booking WA
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Stats -->
-                            <div class="phone-stats">
-                                <div class="phone-stat">
-                                    <span class="phone-stat-num">4.4★</span>
-                                    <span class="phone-stat-label">Rating</span>
-                                </div>
-                                <div class="phone-stat">
-                                    <span class="phone-stat-num">4</span>
-                                    <span class="phone-stat-label">Unit</span>
-                                </div>
-                                <div class="phone-stat">
-                                    <span class="phone-stat-num">100K</span>
-                                    <span class="phone-stat-label">per hari</span>
-                                </div>
-                                <div class="phone-stat">
-                                    <span class="phone-stat-num">14h</span>
-                                    <span class="phone-stat-label">Buka</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Home indicator -->
-                        <div class="phone-indicator"></div>
+                <!-- Spline 3D Stage -->
+                <div class="hero-spline-stage" id="splineContainer"
+                     data-spline-src="https://my.spline.design/hellodistortingintro-tDmhJXaCHk8zNqKRq0nI6B44/">
+                    <div class="hero-spline-placeholder" aria-hidden="true">
+                        <div class="spline-spinner"></div>
+                        <p class="spline-placeholder-text">Memuat...</p>
                     </div>
                 </div>
 
@@ -2743,49 +2637,6 @@
             <span class="section-divider-dot"></span>
         </div>
     </div>
-
-    <!-- ============================================================
-         3D SHOWCASE — Spline interaktif (lazy loaded)
-    ============================================================ -->
-    <section class="section spline-section" id="showcase3d">
-        <div class="container">
-            <div class="section-header">
-                <div class="eyebrow" data-reveal><span aria-hidden="true">🎬</span> Brand Story</div>
-                <h2 class="h-section" data-reveal data-reveal-delay="1">
-                    Lebih dari Sekadar <span class="text-grad">Rental Motor</span>
-                </h2>
-                <p class="lead" data-reveal data-reveal-delay="2">
-                    Kami bukan sekadar tempat sewa — kami partner perjalanan kamu menjelajahi setiap sudut Papua.
-                </p>
-            </div>
-
-            <div class="spline-stage" id="splineContainer"
-                 data-spline-src="https://my.spline.design/hellodistortingintro-tDmhJXaCHk8zNqKRq0nI6B44/"
-                 data-reveal data-reveal-delay="3">
-                <div class="spline-placeholder" aria-hidden="true">
-                    <div class="spline-placeholder-inner">
-                        <div class="spline-spinner"></div>
-                        <p class="spline-placeholder-text">Memuat showcase 3D...</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="spline-hint" data-reveal data-reveal-delay="4">
-                <span class="spline-hint-item">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M9 11.24V7.5a2.5 2.5 0 0 1 5 0v3.74M14 11.24V9a2.5 2.5 0 0 1 5 0v6a7 7 0 0 1-7 7h-3a7 7 0 0 1-7-7v-2.27a2 2 0 0 1 2.5-1.94l1.5.4"/>
-                    </svg>
-                    Tap untuk berinteraksi
-                </span>
-                <span class="spline-hint-item">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M3 12a9 9 0 1 0 9-9M3 12a9 9 0 0 1 9-9M3 12h18"/>
-                    </svg>
-                    Drag untuk eksplor scene
-                </span>
-            </div>
-        </div>
-    </section>
 
     <!-- ============================================================
          EXPLORE SENTANI — Inspirasi Touring (foto AI scenic)
