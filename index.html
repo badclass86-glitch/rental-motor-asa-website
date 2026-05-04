@@ -1946,6 +1946,150 @@
         [data-reveal-delay="3"].in { transition-delay: 0.3s; }
         [data-reveal-delay="4"].in { transition-delay: 0.4s; }
 
+        /* ============================================================
+           EXPLORE SENTANI — Inspirasi Touring (foto AI scenic)
+        ============================================================ */
+        .explore-section {
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse at top, rgba(219, 234, 254, 0.5), transparent 60%),
+                linear-gradient(180deg, var(--white) 0%, #F0F7FF 100%);
+        }
+
+        .explore-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+            margin-top: 48px;
+        }
+
+        @media (min-width: 640px) {
+            .explore-grid { grid-template-columns: repeat(2, 1fr); gap: 22px; }
+        }
+
+        @media (min-width: 1024px) {
+            .explore-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        }
+
+        .explore-card {
+            position: relative;
+            border-radius: 22px;
+            overflow: hidden;
+            aspect-ratio: 4 / 5;
+            cursor: pointer;
+            background: var(--navy-100);
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+            transition: transform 0.45s var(--ease-soft), box-shadow 0.45s var(--ease-soft);
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .explore-card:hover,
+        .explore-card:focus-within {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 48px rgba(15, 23, 42, 0.20);
+        }
+
+        .explore-image {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+
+        .explore-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s var(--ease-soft);
+            display: block;
+        }
+
+        .explore-card:hover .explore-image img {
+            transform: scale(1.08);
+        }
+
+        .explore-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 22px 20px 24px;
+            background: linear-gradient(180deg,
+                rgba(15, 23, 42, 0) 0%,
+                rgba(15, 23, 42, 0) 35%,
+                rgba(15, 23, 42, 0.45) 65%,
+                rgba(15, 23, 42, 0.88) 100%);
+            color: var(--white);
+        }
+
+        .explore-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 11px;
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--white);
+            width: fit-content;
+            margin-bottom: 12px;
+            letter-spacing: 0.02em;
+        }
+
+        .explore-place {
+            font-family: var(--font-heading);
+            font-size: 19px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin: 0 0 6px;
+            color: var(--white);
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        .explore-mood {
+            font-size: 13px;
+            line-height: 1.45;
+            color: rgba(255, 255, 255, 0.92);
+            margin: 0;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+
+        .explore-cta {
+            display: flex;
+            justify-content: center;
+            margin-top: 44px;
+        }
+
+        .btn-explore {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            background: var(--white);
+            color: var(--text-heading);
+            border: 2px solid var(--navy-200);
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            transition: all 0.3s var(--ease-soft);
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+        }
+
+        .btn-explore:hover {
+            border-color: var(--blue-600);
+            color: var(--blue-600);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18);
+        }
+
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
@@ -2330,6 +2474,85 @@
             <span class="section-divider-dot"></span>
         </div>
     </div>
+
+    <!-- ============================================================
+         EXPLORE SENTANI — Inspirasi Touring (foto AI scenic)
+    ============================================================ -->
+    <section class="section explore-section" id="jelajah">
+        <div class="blob blob-blue" style="width:500px;height:500px;top:-120px;left:-180px;opacity:0.35;"></div>
+        <div class="container">
+            <div class="section-header">
+                <div class="eyebrow" data-reveal>🌴 Inspirasi Touring</div>
+                <h2 class="section-heading" data-reveal data-reveal-delay="1">
+                    Jelajahi <span class="accent">Sentani</span> Tanpa Batas
+                </h2>
+                <p class="lead" data-reveal data-reveal-delay="2">
+                    Motor kami sudah dibawa pelanggan menjelajahi tempat-tempat paling indah di Jayapura. Mau ikut menyusuri jalannya?
+                </p>
+            </div>
+
+            <div class="explore-grid">
+                <!-- Card 1: Danau Sentani Sunset -->
+                <a href="#bikes" class="explore-card" data-reveal aria-label="Lihat motor untuk touring ke Danau Sentani">
+                    <div class="explore-image">
+                        <img src="beat-led-scenic.webp" alt="Honda Beat LED parkir di tepi Danau Sentani saat sunset"
+                             width="480" height="600" loading="lazy" decoding="async">
+                    </div>
+                    <div class="explore-overlay">
+                        <span class="explore-badge">📍 Danau Sentani</span>
+                        <h3 class="explore-place">Sunset di Danau Sentani</h3>
+                        <p class="explore-mood">30 menit dari shop · spot favorit foto golden hour</p>
+                    </div>
+                </a>
+
+                <!-- Card 2: Jalur Pegunungan Misty -->
+                <a href="#bikes" class="explore-card" data-reveal data-reveal-delay="1" aria-label="Lihat motor untuk touring jalur pegunungan">
+                    <div class="explore-image">
+                        <img src="beat-fi-scenic.webp" alt="Honda Beat FI di jalan pegunungan misty Jayapura"
+                             width="480" height="600" loading="lazy" decoding="async">
+                    </div>
+                    <div class="explore-overlay">
+                        <span class="explore-badge">📍 Jalur Pegunungan</span>
+                        <h3 class="explore-place">Jalur Misty Jayapura</h3>
+                        <p class="explore-mood">Cocok pagi hari · view dramatic, udara sejuk</p>
+                    </div>
+                </a>
+
+                <!-- Card 3: Cycloop Adventure -->
+                <a href="#bikes" class="explore-card" data-reveal data-reveal-delay="2" aria-label="Lihat motor untuk adventure ke Cycloop">
+                    <div class="explore-image">
+                        <img src="beat-street-scenic.webp" alt="Honda Beat Street di hutan tropis Cycloop"
+                             width="480" height="600" loading="lazy" decoding="async">
+                    </div>
+                    <div class="explore-overlay">
+                        <span class="explore-badge">📍 Cycloop Mountain</span>
+                        <h3 class="explore-place">Hutan Tropis Cycloop</h3>
+                        <p class="explore-mood">Adventure ride · cocok untuk si suka tantangan</p>
+                    </div>
+                </a>
+
+                <!-- Card 4: Pusat Kota -->
+                <a href="#bikes" class="explore-card" data-reveal data-reveal-delay="3" aria-label="Lihat motor untuk keliling pusat kota">
+                    <div class="explore-image">
+                        <img src="mio-m3-scenic.webp" alt="Yamaha Mio M3 di pusat kota Sentani"
+                             width="480" height="600" loading="lazy" decoding="async">
+                    </div>
+                    <div class="explore-overlay">
+                        <span class="explore-badge">📍 Pusat Kota</span>
+                        <h3 class="explore-place">Sentani City Tour</h3>
+                        <p class="explore-mood">Kuliner & shopping · santai keliling kota</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="explore-cta" data-reveal>
+                <a href="#bikes" class="btn-explore">
+                    <span>👀 Lihat Pilihan Motor</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </div>
+    </section>
 
     <!-- ============================================================
          KEY ADVANTAGES
