@@ -3,25 +3,28 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://rentalmotorasa.com/</loc>
-    <lastmod>2026-05-02</lastmod>
+    <lastmod>2026-05-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
       <image:loc>https://rentalmotorasa.com/beat-led.jpg</image:loc>
       <image:title>Honda Beat LED — Rental Motor ASA Sentani</image:title>
-      <image:caption>Sewa motor Honda Beat LED di Sentani Jayapura, Rp 100.000 per hari</image:caption>
+      <image:caption>Sewa motor Honda Beat LED di Sentani Jayapura, Rp 100.000 per hari, view sunset Danau Sentani</image:caption>
     </image:image>
     <image:image>
       <image:loc>https://rentalmotorasa.com/beat-fi.jpg</image:loc>
       <image:title>Honda Beat FI — Rental Motor ASA Sentani</image:title>
+      <image:caption>Sewa motor Honda Beat FI di Sentani Jayapura, Rp 100.000 per hari, jalan pegunungan Jayapura</image:caption>
     </image:image>
     <image:image>
       <image:loc>https://rentalmotorasa.com/beat-street.jpg</image:loc>
       <image:title>Honda Beat Street — Rental Motor ASA Sentani</image:title>
+      <image:caption>Sewa motor Honda Beat Street di Sentani Jayapura, Rp 100.000 per hari, scenic mountain road</image:caption>
     </image:image>
     <image:image>
       <image:loc>https://rentalmotorasa.com/mio-m3.jpg</image:loc>
       <image:title>Yamaha Mio M3 — Rental Motor ASA Sentani</image:title>
+      <image:caption>Sewa motor Yamaha Mio M3 di Sentani Jayapura, Rp 100.000 per hari, urban commuter</image:caption>
     </image:image>
   </url>
 </urlset>
