@@ -5,7 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rental Motor ASA — Sewa Motor Sentani Jayapura | Rp 100K/Hari</title>
     <meta name="description" content="Sewa motor terpercaya di Sentani, Jayapura. 4 unit motor matic siap operasional. Rp 100.000/hari. Cukup KTP. Hub: 0813-4471-2297.">
-    <meta name="theme-color" content="#0F172A">
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0B1120" media="(prefers-color-scheme: dark)">
+    <meta name="color-scheme" content="light dark">
+
+    <!-- Anti-FOUC: set theme BEFORE body render -->
+    <script>
+      (function() {
+        try {
+          var stored = localStorage.getItem('theme');
+          var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = stored || (systemDark ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch(e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
 
     <meta name="robots" content="index,follow,max-image-preview:large">
     <link rel="canonical" href="https://rentalmotorasa.com/">
@@ -115,6 +131,49 @@
             --text-heading: #111827;
             --text-body: #374151;
             --text-muted: #4B5563;
+
+            /* ============================================================
+               SEMANTIC SURFACE TOKENS (theme-aware)
+            ============================================================ */
+            --surface-page: var(--white);
+            --surface-page-gradient: linear-gradient(180deg, #ffffff 0%, #f0f6ff 30%, #f8fafc 60%, #f0f9f4 100%);
+            --surface-card: var(--white);
+            --surface-section-tint: var(--navy-50);
+            --surface-section-blue: var(--blue-50);
+            --surface-glass: rgba(255, 255, 255, 0.85);
+            --surface-glass-strong: rgba(255, 255, 255, 0.95);
+            --surface-overlay-dark: rgba(15, 23, 42, 0.85);
+            --border-subtle: var(--navy-200);
+            --border-strong: var(--navy-300);
+            --shadow-color: 15, 23, 42;
+            --grid-line-color: var(--navy-200);
+            /* Theme transition */
+            --theme-transition: background-color 0.4s var(--ease-soft),
+                                color 0.4s var(--ease-soft),
+                                border-color 0.4s var(--ease-soft);
+            color-scheme: light;
+        }
+
+        /* ============================================================
+           DARK THEME OVERRIDES (data-theme="dark")
+        ============================================================ */
+        [data-theme="dark"] {
+            --text-heading: #F1F5F9;
+            --text-body: #CBD5E1;
+            --text-muted: #94A3B8;
+            --surface-page: #0B1120;
+            --surface-page-gradient: linear-gradient(180deg, #0a0f1c 0%, #0e1729 30%, #0a0f1c 60%, #0b1224 100%);
+            --surface-card: #131C2E;
+            --surface-section-tint: #0F172A;
+            --surface-section-blue: #0F1B3D;
+            --surface-glass: rgba(15, 23, 42, 0.85);
+            --surface-glass-strong: rgba(15, 23, 42, 0.95);
+            --surface-overlay-dark: rgba(0, 0, 0, 0.7);
+            --border-subtle: rgba(148, 163, 184, 0.18);
+            --border-strong: rgba(148, 163, 184, 0.32);
+            --shadow-color: 0, 0, 0;
+            --grid-line-color: rgba(148, 163, 184, 0.10);
+            color-scheme: dark;
         }
 
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -127,7 +186,8 @@
             font-size: 16px;
             line-height: 1.7;
             color: var(--text-body);
-            background: linear-gradient(180deg, #ffffff 0%, #f0f6ff 30%, #f8fafc 60%, #f0f9f4 100%);
+            background: var(--surface-page-gradient);
+            transition: var(--theme-transition);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             font-feature-settings: "cv11", "ss01";
@@ -261,10 +321,10 @@
             border-bottom: 1px solid transparent;
         }
         .nav.scrolled {
-            background: rgba(255, 255, 255, 0.85);
+            background: var(--surface-glass);
             backdrop-filter: saturate(180%) blur(16px);
             -webkit-backdrop-filter: saturate(180%) blur(16px);
-            border-bottom-color: var(--navy-200);
+            border-bottom-color: var(--border-subtle);
         }
         .nav-inner {
             display: flex;
@@ -308,6 +368,77 @@
         .nav-links a:hover { color: var(--text-heading); }
         @media (min-width: 768px) {
             .nav-links { display: flex; }
+        }
+
+        /* ============================================================
+           NAV ACTIONS — theme toggle + booking button
+        ============================================================ */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theme-toggle {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--r-full);
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-body);
+            display: grid;
+            place-items: center;
+            transition: background 0.3s var(--ease-soft),
+                        border-color 0.3s var(--ease-soft),
+                        color 0.3s var(--ease-soft),
+                        transform 0.3s var(--ease-soft);
+            box-shadow: var(--shadow-xs);
+            overflow: hidden;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--blue-600);
+            color: var(--blue-600);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(37, 99, 235, 0.18);
+        }
+
+        .theme-toggle:focus-visible {
+            outline: 3px solid var(--blue-600);
+            outline-offset: 3px;
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.94);
+        }
+
+        .theme-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(0deg) scale(1);
+            transition: transform 0.5s var(--ease-soft), opacity 0.3s var(--ease-soft);
+        }
+
+        /* Light mode (data-theme="light"): show MOON (click to go dark) */
+        :root[data-theme="light"] .theme-icon-sun {
+            opacity: 0;
+            transform: translate(-50%, -50%) rotate(90deg) scale(0.5);
+        }
+        :root[data-theme="light"] .theme-icon-moon {
+            opacity: 1;
+            transform: translate(-50%, -50%) rotate(0deg) scale(1);
+        }
+
+        /* Dark mode (data-theme="dark"): show SUN (click to go light) */
+        :root[data-theme="dark"] .theme-icon-sun {
+            opacity: 1;
+            transform: translate(-50%, -50%) rotate(0deg) scale(1);
+        }
+        :root[data-theme="dark"] .theme-icon-moon {
+            opacity: 0;
+            transform: translate(-50%, -50%) rotate(-90deg) scale(0.5);
         }
 
         /* ============================================================
@@ -361,13 +492,13 @@
             transform: translateY(-1px);
         }
         .btn-ghost {
-            background: var(--white);
+            background: var(--surface-card);
             color: var(--navy-900);
             border: 1px solid var(--navy-200);
         }
         .btn-ghost:hover {
             border-color: var(--navy-900);
-            background: var(--navy-50);
+            background: var(--surface-section-tint);
         }
         .btn-lg {
             padding: 14px 28px;
@@ -387,8 +518,8 @@
             padding: 140px 0 80px;
             overflow: hidden;
             background:
-                radial-gradient(ellipse 60% 40% at 50% 0%, var(--blue-50), transparent 70%),
-                linear-gradient(180deg, var(--white), var(--navy-50));
+                radial-gradient(ellipse 60% 40% at 50% 0%, var(--surface-section-blue), transparent 70%),
+                linear-gradient(180deg, var(--surface-card), var(--surface-section-tint));
         }
         /* Noise texture overlay */
         .hero::after {
@@ -430,7 +561,7 @@
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            background: var(--white);
+            background: var(--surface-card);
             padding: 8px 14px 8px 8px;
             border-radius: var(--r-full);
             box-shadow: 0 4px 16px -4px rgba(15,23,42,0.08);
@@ -791,7 +922,7 @@
         }
         /* Bike card inside phone */
         .phone-bike {
-            background: #fff;
+            background: var(--surface-card);
             border-radius: 12px;
             margin: 0 14px 10px;
             overflow: hidden;
@@ -854,7 +985,7 @@
             display: flex;
             justify-content: space-around;
             padding: 10px 14px;
-            background: #fff;
+            background: var(--surface-card);
             border-top: 1px solid #f1f5f9;
             margin: 0 14px;
             border-radius: 8px;
@@ -1026,7 +1157,7 @@
         }
 
         .bike-card {
-            background: var(--white);
+            background: var(--surface-card);
             border: 1px solid var(--navy-200);
             border-radius: var(--r-xl);
             overflow: hidden;
@@ -1063,7 +1194,7 @@
             position: relative;
             aspect-ratio: 4 / 3;
             overflow: hidden;
-            background: linear-gradient(135deg, var(--navy-100), var(--navy-50));
+            background: linear-gradient(135deg, var(--surface-section-tint), var(--surface-card));
         }
         .bike-image img {
             width: 100%;
@@ -1176,7 +1307,7 @@
             justify-content: center;
             gap: 8px;
             padding: 12px;
-            background: var(--navy-50);
+            background: var(--surface-section-tint);
             color: var(--navy-900);
             font-size: 14px;
             font-weight: 600;
@@ -1204,7 +1335,7 @@
         }
 
         .adv-card {
-            background: var(--white);
+            background: var(--surface-card);
             border: 1px solid var(--navy-200);
             border-radius: var(--r-xl);
             padding: 28px 24px;
@@ -1253,7 +1384,7 @@
            HOW IT WORKS
         ============================================================ */
         .steps-section {
-            background: var(--navy-50);
+            background: var(--surface-section-tint);
             background-image:
                 radial-gradient(circle at center, rgba(99,102,241,0.18) 1px, transparent 1.5px);
             background-size: 28px 28px;
@@ -1284,7 +1415,7 @@
             .steps-grid { grid-template-columns: repeat(3, 1fr); gap: 32px; }
         }
         .step-card {
-            background: var(--white);
+            background: var(--surface-card);
             border: 1px solid var(--navy-200);
             border-radius: var(--r-xl);
             padding: 32px 24px;
@@ -1348,7 +1479,7 @@
         .reviews-grid::-webkit-scrollbar { display: none; }
 
         .review-card {
-            background: var(--white);
+            background: var(--surface-card);
             border: 1px solid var(--navy-200);
             border-radius: var(--r-xl);
             padding: 28px 24px;
@@ -1383,7 +1514,7 @@
             height: 44px;
             border-radius: 50%;
             border: 1.5px solid var(--navy-200);
-            background: var(--white);
+            background: var(--surface-card);
             color: var(--text-heading);
             display: grid;
             place-items: center;
@@ -1552,7 +1683,7 @@
            FOOTER
         ============================================================ */
         .footer {
-            background: var(--navy-50);
+            background: var(--surface-section-tint);
             padding: 48px 0 32px;
             border-top: 1px solid var(--navy-200);
         }
@@ -1618,7 +1749,7 @@
             bottom: 24px;
             left: 24px;
             z-index: 55;
-            background: var(--white);
+            background: var(--surface-card);
             border: 1px solid var(--navy-200);
             border-radius: 14px;
             box-shadow: 0 12px 32px -8px rgba(15,23,42,0.18),
@@ -1806,7 +1937,7 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: var(--white);
+            background: var(--surface-card);
             color: var(--blue-700);
             padding: 7px 16px;
             border-radius: var(--r-full);
@@ -1830,7 +1961,7 @@
            MAPS SECTION
         ============================================================ */
         .maps-section {
-            background: var(--navy-50);
+            background: var(--surface-section-tint);
         }
         .maps-wrapper {
             border-radius: 20px;
@@ -1842,7 +1973,7 @@
             display: flex;
             justify-content: center;
             padding: 16px;
-            background: var(--white);
+            background: var(--surface-card);
             border-top: 1px solid var(--navy-100);
         }
         .btn-outline {
@@ -1953,8 +2084,8 @@
             position: relative;
             overflow: hidden;
             background:
-                radial-gradient(ellipse at top, rgba(219, 234, 254, 0.5), transparent 60%),
-                linear-gradient(180deg, var(--white) 0%, #F0F7FF 100%);
+                radial-gradient(ellipse at top, var(--surface-section-blue), transparent 60%),
+                linear-gradient(180deg, var(--surface-card) 0%, var(--surface-section-tint) 100%);
         }
 
         .explore-grid {
@@ -2081,7 +2212,7 @@
             align-items: center;
             gap: 10px;
             padding: 14px 28px;
-            background: var(--white);
+            background: var(--surface-card);
             color: var(--text-heading);
             border: 2px solid var(--navy-200);
             border-radius: 999px;
@@ -2149,12 +2280,25 @@
                 <li><a href="#how">Cara Sewa</a></li>
                 <li><a href="#reviews">Ulasan</a></li>
             </ul>
-            <a href="https://wa.me/6281344712297?text=Halo%20Rental%20Motor%20Asa,%20saya%20ingin%20menyewa%20motor"
-               target="_blank" rel="noopener"
-               class="btn btn-primary">
-                Booking
-                <svg class="btn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle" type="button"
+                        aria-label="Ganti mode tampilan terang atau gelap"
+                        title="Ganti mode terang/gelap">
+                    <svg class="theme-icon theme-icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="4"/>
+                        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+                    </svg>
+                    <svg class="theme-icon theme-icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </button>
+                <a href="https://wa.me/6281344712297?text=Halo%20Rental%20Motor%20Asa,%20saya%20ingin%20menyewa%20motor"
+                   target="_blank" rel="noopener"
+                   class="btn btn-primary">
+                    Booking
+                    <svg class="btn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
         </div>
     </nav>
 
@@ -2574,7 +2718,7 @@
     <!-- ============================================================
          KEY ADVANTAGES
     ============================================================ -->
-    <section class="section" id="advantages" style="background: var(--navy-50); position:relative; overflow:hidden;">
+    <section class="section" id="advantages" style="background: var(--surface-section-tint); position:relative; overflow:hidden;">
         <div class="blob blob-blue" style="width:400px;height:400px;bottom:-80px;right:-80px;"></div>
         <div class="container">
             <div class="section-header">
@@ -2869,6 +3013,47 @@
     </a>
 
     <script>
+        // ============================================================
+        // THEME TOGGLE — hybrid (auto OS + manual override)
+        // ============================================================
+        (function initTheme() {
+            const root = document.documentElement;
+            const toggle = document.getElementById('themeToggle');
+            const mql = window.matchMedia('(prefers-color-scheme: dark)');
+
+            // Update aria-label sesuai theme aktif (untuk screen reader)
+            const updateLabel = () => {
+                if (!toggle) return;
+                const current = root.getAttribute('data-theme');
+                const next = current === 'dark' ? 'terang' : 'gelap';
+                toggle.setAttribute('aria-label', `Ganti ke mode ${next}`);
+                toggle.setAttribute('title', `Ganti ke mode ${next}`);
+            };
+            updateLabel();
+
+            // Manual toggle: simpan ke localStorage agar persist
+            if (toggle) {
+                toggle.addEventListener('click', () => {
+                    const current = root.getAttribute('data-theme');
+                    const next = current === 'dark' ? 'light' : 'dark';
+                    root.setAttribute('data-theme', next);
+                    try { localStorage.setItem('theme', next); } catch(e) {}
+                    updateLabel();
+                });
+            }
+
+            // Listen perubahan OS preference — hanya berlaku kalau user
+            // belum override manual (localStorage kosong)
+            mql.addEventListener('change', (e) => {
+                try {
+                    if (!localStorage.getItem('theme')) {
+                        root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+                        updateLabel();
+                    }
+                } catch(e) {}
+            });
+        })();
+
         // Nav scroll state
         const nav = document.getElementById('nav');
         const onScroll = () => {
