@@ -185,20 +185,24 @@
             letter-spacing: -0.03em;
             color: var(--text-heading);
         }
-        /* Split words wrapper untuk GSAP reveal */
+        /* Split words wrapper untuk GSAP reveal — dramatic splash entrance */
         .word-wrap {
             display: inline-block;
             overflow: hidden;
             vertical-align: top;
             line-height: 1.1;
+            padding: 0 2px;
+            margin: 0 -2px;
         }
         .word {
             display: inline-block;
-            transform: translateY(110%);
-            will-change: transform;
+            transform: translateY(130%) scale(0.7);
+            opacity: 0;
+            filter: blur(8px);
+            will-change: transform, opacity, filter;
         }
         /* Fallback kalau GSAP gagal load — tampil normal */
-        .no-gsap .word { transform: none; }
+        .no-gsap .word { transform: none; opacity: 1; filter: none; }
         .h-display .accent {
             background: linear-gradient(135deg, #2563EB 0%, #6366F1 25%, #8B5CF6 50%, #6366F1 75%, #2563EB 100%);
             background-size: 200% 200%;
@@ -1740,6 +1744,27 @@
         }
 
         /* ============================================================
+           SCROLL PROGRESS BAR — visual feedback scroll position
+        ============================================================ */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, #2563EB 0%, #6366F1 50%, #8B5CF6 100%);
+            z-index: 9999;
+            transition: width 0.1s ease-out;
+            box-shadow: 0 0 12px rgba(99,102,241,0.6);
+            pointer-events: none;
+        }
+        .sticky-cta.show ~ .scroll-progress,
+        body:has(.sticky-cta.show) .scroll-progress {
+            top: 42px;
+            transition: width 0.1s ease-out, top 0.4s var(--ease-out);
+        }
+
+        /* ============================================================
            STICKY CTA BAR (muncul setelah scroll jauh)
         ============================================================ */
         .sticky-cta {
@@ -1938,6 +1963,9 @@
             </symbol>
         </defs>
     </svg>
+
+    <!-- Scroll progress bar -->
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
     <!-- ============================================================
          STICKY CTA BAR
@@ -2613,6 +2641,14 @@
 
             // Hide scroll indicator setelah user scroll
             document.body.classList.toggle('scrolled', window.scrollY > 80);
+
+            // Scroll progress bar — width sesuai % scroll position
+            const progress = document.getElementById('scrollProgress');
+            if (progress) {
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrolled = (window.scrollY / docHeight) * 100;
+                progress.style.width = Math.min(scrolled, 100) + '%';
+            }
         };
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
@@ -2862,13 +2898,16 @@
 
                 walk(el);
 
-                // Animate semua .word element
+                // Animate semua .word element — DRAMATIC splash entrance (snappy)
                 gsap.to(el.querySelectorAll('.word'), {
                     y: '0%',
-                    duration: 0.9,
-                    ease: 'power3.out',
-                    stagger: 0.06,
-                    delay: 0.2
+                    scale: 1,
+                    opacity: 1,
+                    filter: 'blur(0px)',
+                    duration: 0.7,
+                    ease: 'back.out(1.4)',
+                    stagger: 0.08,
+                    delay: 0.15
                 });
             };
             splitHeadline(document.querySelector('[data-gsap-split]'));
@@ -2908,16 +2947,18 @@
             }
 
             // ============================================================
-            // #4 Bike cards stagger reveal — pakai fromTo karena CSS data-reveal opacity:0 conflict
+            // #4 Bike cards DRAMATIC flip-in stagger — y + scale + rotate
             // ============================================================
             gsap.fromTo('.bike-card',
-                { opacity: 0, y: 60 },
+                { opacity: 0, y: 100, scale: 0.85, rotationX: 20 },
                 {
                     opacity: 1,
                     y: 0,
-                    duration: 0.8,
-                    ease: 'power2.out',
-                    stagger: 0.12,
+                    scale: 1,
+                    rotationX: 0,
+                    duration: 1.0,
+                    ease: 'back.out(1.2)',
+                    stagger: 0.18,
                     scrollTrigger: {
                         trigger: '.bikes-grid',
                         start: 'top 80%',
@@ -2927,17 +2968,20 @@
             );
 
             // ============================================================
-            // #5 Section titles slide-in horizontal — masuk dari kiri
+            // #5 Section titles DRAMATIC slide-in — skew + scale + blur
             // ============================================================
             gsap.utils.toArray('.section-header').forEach((header) => {
                 gsap.fromTo(header.children,
-                    { opacity: 0, x: -40 },
+                    { opacity: 0, x: -100, skewX: 6, scale: 0.95, filter: 'blur(6px)' },
                     {
                         opacity: 1,
                         x: 0,
-                        duration: 0.7,
-                        ease: 'power3.out',
-                        stagger: 0.1,
+                        skewX: 0,
+                        scale: 1,
+                        filter: 'blur(0px)',
+                        duration: 0.95,
+                        ease: 'power4.out',
+                        stagger: 0.15,
                         scrollTrigger: {
                             trigger: header,
                             start: 'top 85%',
@@ -2948,16 +2992,17 @@
             });
 
             // ============================================================
-            // BONUS: Step cards stagger
+            // BONUS: Step cards DRAMATIC bounce-in stagger
             // ============================================================
             gsap.fromTo('.step-card',
-                { opacity: 0, y: 40 },
+                { opacity: 0, y: 80, scale: 0.8 },
                 {
                     opacity: 1,
                     y: 0,
-                    duration: 0.7,
-                    ease: 'power2.out',
-                    stagger: 0.15,
+                    scale: 1,
+                    duration: 0.9,
+                    ease: 'back.out(1.6)',
+                    stagger: 0.2,
                     scrollTrigger: {
                         trigger: '.steps-grid',
                         start: 'top 80%',
@@ -2967,19 +3012,59 @@
             );
 
             // ============================================================
-            // BONUS: Advantage cards stagger
+            // BONUS: Step number circle pop animation
+            // ============================================================
+            gsap.fromTo('.step-num',
+                { scale: 0, rotation: -180 },
+                {
+                    scale: 1,
+                    rotation: 0,
+                    duration: 0.8,
+                    ease: 'back.out(2)',
+                    stagger: 0.2,
+                    scrollTrigger: {
+                        trigger: '.steps-grid',
+                        start: 'top 75%',
+                        once: true
+                    }
+                }
+            );
+
+            // ============================================================
+            // BONUS: Advantage cards 3D flip stagger
             // ============================================================
             gsap.fromTo('.adv-card',
-                { opacity: 0, y: 40 },
+                { opacity: 0, y: 60, scale: 0.85, rotationY: 15 },
                 {
                     opacity: 1,
                     y: 0,
-                    duration: 0.7,
-                    ease: 'power2.out',
-                    stagger: 0.1,
+                    scale: 1,
+                    rotationY: 0,
+                    duration: 0.9,
+                    ease: 'back.out(1.3)',
+                    stagger: 0.15,
                     scrollTrigger: {
                         trigger: '.advantages-grid',
                         start: 'top 80%',
+                        once: true
+                    }
+                }
+            );
+
+            // ============================================================
+            // BONUS: Advantage icons rotate in dengan bounce
+            // ============================================================
+            gsap.fromTo('.adv-icon',
+                { scale: 0, rotation: 180 },
+                {
+                    scale: 1,
+                    rotation: 0,
+                    duration: 0.7,
+                    ease: 'back.out(2.5)',
+                    stagger: 0.15,
+                    scrollTrigger: {
+                        trigger: '.advantages-grid',
+                        start: 'top 75%',
                         once: true
                     }
                 }
