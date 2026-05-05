@@ -366,6 +366,31 @@
             transition: color 0.2s ease;
         }
         .nav-links a:hover { color: var(--text-heading); }
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-heading);
+            padding: 8px;
+            cursor: pointer;
+        }
+        @media (max-width: 767px) {
+            .mobile-menu-toggle { display: block; }
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--surface-card);
+                flex-direction: column;
+                padding: 20px;
+                gap: 20px;
+                border-bottom: 1px solid var(--border-subtle);
+                box-shadow: var(--shadow-md);
+                text-align: center;
+            }
+            .nav-links.active { display: flex; }
+        }
         @media (min-width: 768px) {
             .nav-links { display: flex; }
         }
@@ -1175,18 +1200,19 @@
                         0 0 0 1px rgba(37,99,235,0.1);
             border-color: var(--blue-300);
         }
-        /* Glow yg muncul saat hover */
+        /* Spotlight Glare Glow */
         .bike-card::after {
             content: '';
             position: absolute;
             inset: 0;
             border-radius: var(--r-xl);
-            background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-                                        rgba(37,99,235,0.08), transparent 40%);
+            background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                                        rgba(255,255,255,0.18), transparent 45%);
             opacity: 0;
             transition: opacity 0.4s ease;
             pointer-events: none;
-            z-index: 1;
+            z-index: 10;
+            mix-blend-mode: overlay;
         }
         .bike-card:hover::after { opacity: 1; }
         @media (prefers-reduced-motion: reduce) {
@@ -2328,9 +2354,211 @@
             [data-reveal] { opacity: 1; transform: none; }
             .spline-spinner { animation: none; }
         }
+
+        /* ============================================================
+           PRELOADER
+        ============================================================ */
+        .preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: var(--surface-page);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.8s cubic-bezier(0.8, 0, 0.2, 1), opacity 0.8s ease;
+        }
+        .preloader.hide {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .preloader-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+        .preloader-logo {
+            font-size: 48px;
+            animation: pulseLogo 1.5s ease-in-out infinite alternate;
+        }
+        .preloader-text {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--text-heading);
+            letter-spacing: -0.02em;
+        }
+        .preloader-bar {
+            width: 140px;
+            height: 4px;
+            background: var(--navy-200);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .preloader-progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--blue-500), var(--blue-700));
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        @keyframes pulseLogo {
+            from { transform: scale(0.9) translateY(0); filter: drop-shadow(0 0 10px rgba(37,99,235,0)); }
+            to { transform: scale(1.1) translateY(-5px); filter: drop-shadow(0 10px 15px rgba(37,99,235,0.3)); }
+        }
+
+        /* ============================================================
+           CUSTOM CURSOR — desktop dengan mouse only
+           FIX: tambah (hover: hover) supaya touch laptop hybrid tidak kena
+        ============================================================ */
+        @media (pointer: fine) and (hover: hover) {
+            body { cursor: none; }
+            a, button, input, textarea, select, .theme-toggle, .reviews-arrow, .reviews-dot, .explore-card, .bike-card, #backToTop { cursor: none !important; }
+            .custom-cursor {
+                position: fixed;
+                top: 0; left: 0;
+                width: 8px; height: 8px;
+                background: var(--blue-600);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 100000;
+                transform: translate(-50%, -50%);
+                transition: opacity 0.3s, background 0.3s;
+            }
+            .custom-cursor-follower {
+                position: fixed;
+                top: 0; left: 0;
+                width: 36px; height: 36px;
+                border: 1.5px solid var(--blue-500);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 99999;
+                transform: translate(-50%, -50%);
+                transition: width 0.2s, height 0.2s, background 0.2s, border-color 0.2s, opacity 0.3s;
+            }
+            .custom-cursor-follower.hover {
+                width: 56px; height: 56px;
+                background: rgba(37, 99, 235, 0.1);
+                border-color: rgba(37, 99, 235, 0.2);
+                backdrop-filter: blur(2px);
+                -webkit-backdrop-filter: blur(2px);
+            }
+            .custom-cursor.hover { background: transparent; }
+        }
+
+        /* ============================================================
+           MARQUEE RIBBON
+        ============================================================ */
+        .marquee-wrapper {
+            background: var(--blue-600);
+            color: var(--white);
+            padding: 16px 0;
+            overflow: hidden;
+            display: flex;
+            white-space: nowrap;
+            position: relative;
+            transform: rotate(-2deg) scale(1.05);
+            margin: 40px 0;
+            box-shadow: 0 10px 30px -10px rgba(37,99,235,0.4);
+            border-top: 1px solid rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            z-index: 10;
+        }
+        .marquee-track {
+            display: flex;
+            gap: 40px;
+            animation: scrollMarquee 25s linear infinite;
+        }
+        .marquee-track span {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 18px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        @keyframes scrollMarquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .marquee-track { animation: none; }
+            .marquee-wrapper { transform: none; margin: 40px 0; }
+        }
+
+        /* VIEW TRANSITIONS API for Theme Sweep */
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+            animation: none;
+            mix-blend-mode: normal;
+        }
+        ::view-transition-old(root) { z-index: 1; }
+        ::view-transition-new(root) { z-index: 2; }
+        [data-theme="light"]::view-transition-old(root) { z-index: 2; }
+        [data-theme="light"]::view-transition-new(root) { z-index: 1; }
+
+        /* CIRCULAR SCROLL PROGRESS */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            cursor: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            transform: translateY(20px) scale(0.8);
+            transition: opacity 0.4s ease, transform 0.4s ease, background 0.3s;
+            pointer-events: none;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        .back-to-top:hover {
+            background: var(--surface-hover);
+            transform: translateY(-5px) scale(1.05);
+        }
+        .progress-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: rotate(-90deg);
+        }
+        .progress-ring-circle {
+            stroke-dasharray: 151;
+            stroke-dashoffset: 151;
+            transition: stroke-dashoffset 0.1s linear;
+        }
+        .btt-icon {
+            color: var(--text-heading);
+            z-index: 2;
+        }
     </style>
 </head>
 <body>
+
+    <!-- PRELOADER -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo">🏍️</div>
+            <div class="preloader-text">Rental Motor ASA</div>
+            <div class="preloader-bar">
+                <div class="preloader-progress" id="preloaderProgress"></div>
+            </div>
+        </div>
+    </div>
 
     <!-- SVG sprite (dedupe icons used in multiple places) -->
     <svg width="0" height="0" style="position:absolute;" aria-hidden="true">
@@ -2372,6 +2600,9 @@
                 <li><a href="#reviews">Ulasan</a></li>
             </ul>
             <div class="nav-actions">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Buka menu navigasi">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
                 <button class="theme-toggle" id="themeToggle" type="button"
                         aria-label="Ganti mode tampilan terang atau gelap"
                         title="Ganti mode terang/gelap">
@@ -2392,6 +2623,8 @@
             </div>
         </div>
     </nav>
+
+    <main id="main-content">
 
     <!-- ============================================================
          HERO
@@ -2490,6 +2723,85 @@
                 <div class="scroll-wheel"></div>
             </div>
             <span class="scroll-text">Scroll</span>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         EXPLORE SENTANI — Inspirasi Touring (foto AI scenic)
+    ============================================================ -->
+    <section class="section explore-section" id="explore">
+        <div class="blob blob-blue" style="width:500px;height:500px;top:-120px;left:-180px;opacity:0.35;"></div>
+        <div class="container">
+            <div class="section-header">
+                <div class="eyebrow" data-reveal><span aria-hidden="true">🌴</span> Inspirasi Touring</div>
+                <h2 class="h-section" data-reveal data-reveal-delay="1">
+                    Jelajahi <span class="text-grad">Sentani</span> Tanpa Batas
+                </h2>
+                <p class="lead" data-reveal data-reveal-delay="2">
+                    Motor kami sudah dibawa pelanggan menjelajahi tempat-tempat paling indah di Jayapura. Mau ikut menyusuri jalannya?
+                </p>
+            </div>
+
+            <div class="explore-grid">
+                <!-- Card 1: Danau Sentani Sunset -->
+                <div class="explore-card" data-reveal aria-label="Booking motor via WhatsApp untuk touring ke Danau Sentani">
+                    <div class="explore-image">
+                        <img src="beat-led-scenic.webp" alt="Honda Beat LED parkir di tepi Danau Sentani saat sunset"
+                             width="480" height="600" loading="lazy" decoding="async">
+                    </div>
+                    <div class="explore-overlay">
+                        <span class="explore-badge"><span aria-hidden="true">📍</span> Danau Sentani</span>
+                        <h3 class="explore-place">Sunset di Danau Sentani</h3>
+                        <p class="explore-mood">30 menit dari shop · spot favorit foto golden hour</p>
+                    </div>
+                </div>
+
+                <!-- Card 2: Jalur Pegunungan Misty -->
+                <div class="explore-card" data-reveal data-reveal-delay="1" aria-label="Booking motor via WhatsApp untuk touring jalur pegunungan">
+                    <div class="explore-image">
+                        <img src="beat-fi-scenic.webp" alt="Honda Beat FI di jalan pegunungan misty Jayapura"
+                             width="480" height="600" loading="lazy" decoding="async">
+                    </div>
+                    <div class="explore-overlay">
+                        <span class="explore-badge"><span aria-hidden="true">📍</span> Jalur Pegunungan</span>
+                        <h3 class="explore-place">Jalur Misty Jayapura</h3>
+                        <p class="explore-mood">Cocok pagi hari · view dramatic, udara sejuk</p>
+                    </div>
+                </div>
+
+                <!-- Card 3: Cycloop Adventure -->
+                <div class="explore-card" data-reveal data-reveal-delay="2" aria-label="Booking motor via WhatsApp untuk adventure ke Cycloop">
+                    <div class="explore-image">
+                        <img src="beat-street-scenic.webp" alt="Honda Beat Street di hutan tropis Cycloop"
+                             width="480" height="600" loading="lazy" decoding="async">
+                    </div>
+                    <div class="explore-overlay">
+                        <span class="explore-badge"><span aria-hidden="true">📍</span> Cycloop Mountain</span>
+                        <h3 class="explore-place">Hutan Tropis Cycloop</h3>
+                        <p class="explore-mood">Adventure ride · cocok untuk si suka tantangan</p>
+                    </div>
+                </div>
+
+                <!-- Card 4: Pusat Kota -->
+                <div class="explore-card" data-reveal data-reveal-delay="3" aria-label="Booking motor via WhatsApp untuk keliling pusat kota">
+                    <div class="explore-image">
+                        <img src="mio-m3-scenic.webp" alt="Yamaha Mio M3 di pusat kota Sentani"
+                             width="480" height="600" loading="lazy" decoding="async">
+                    </div>
+                    <div class="explore-overlay">
+                        <span class="explore-badge"><span aria-hidden="true">📍</span> Pusat Kota</span>
+                        <h3 class="explore-place">Sentani City Tour</h3>
+                        <p class="explore-mood">Kuliner & shopping · santai keliling kota</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="explore-cta" data-reveal>
+                <a href="#bikes" class="btn-explore">
+                    <span>Cek Spesifikasi &amp; Harga Motor</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
         </div>
     </section>
 
@@ -2643,100 +2955,26 @@
         </div>
     </section>
 
-    <div class="container">
-        <div class="section-divider" aria-hidden="true">
-            <span class="section-divider-dot"></span>
-            <span class="section-divider-dot"></span>
-            <span class="section-divider-dot"></span>
+
+    <!-- ============================================================
+         MARQUEE RIBBON
+    ============================================================ -->
+    <div class="marquee-wrapper" aria-hidden="true">
+        <div class="marquee-track">
+            <span>⚡ SYARAT MUDAH KTP SAJA</span>
+            <span>⚡ BUKA TIAP HARI 06.00-20.00</span>
+            <span>⚡ HELM & BBM SIAP PAKAI</span>
+            <span>⚡ MOTOR TERAWAT</span>
+            <span>⚡ HARGA TERJANGKAU</span>
+            <!-- duplicate for infinite loop -->
+            <span>⚡ SYARAT MUDAH KTP SAJA</span>
+            <span>⚡ BUKA TIAP HARI 06.00-20.00</span>
+            <span>⚡ HELM & BBM SIAP PAKAI</span>
+            <span>⚡ MOTOR TERAWAT</span>
+            <span>⚡ HARGA TERJANGKAU</span>
         </div>
     </div>
 
-    <!-- ============================================================
-         EXPLORE SENTANI — Inspirasi Touring (foto AI scenic)
-    ============================================================ -->
-    <section class="section explore-section" id="explore">
-        <div class="blob blob-blue" style="width:500px;height:500px;top:-120px;left:-180px;opacity:0.35;"></div>
-        <div class="container">
-            <div class="section-header">
-                <div class="eyebrow" data-reveal><span aria-hidden="true">🌴</span> Inspirasi Touring</div>
-                <h2 class="h-section" data-reveal data-reveal-delay="1">
-                    Jelajahi <span class="text-grad">Sentani</span> Tanpa Batas
-                </h2>
-                <p class="lead" data-reveal data-reveal-delay="2">
-                    Motor kami sudah dibawa pelanggan menjelajahi tempat-tempat paling indah di Jayapura. Mau ikut menyusuri jalannya?
-                </p>
-            </div>
-
-            <div class="explore-grid">
-                <!-- Card 1: Danau Sentani Sunset -->
-                <a href="https://wa.me/6281344712297?text=Halo,%20saya%20mau%20sewa%20motor%20untuk%20touring%20ke%20Danau%20Sentani."
-                   target="_blank" rel="noopener"
-                   class="explore-card" data-reveal aria-label="Booking motor via WhatsApp untuk touring ke Danau Sentani">
-                    <div class="explore-image">
-                        <img src="beat-led-scenic.webp" alt="Honda Beat LED parkir di tepi Danau Sentani saat sunset"
-                             width="480" height="600" loading="lazy" decoding="async">
-                    </div>
-                    <div class="explore-overlay">
-                        <span class="explore-badge"><span aria-hidden="true">📍</span> Danau Sentani</span>
-                        <h3 class="explore-place">Sunset di Danau Sentani</h3>
-                        <p class="explore-mood">30 menit dari shop · spot favorit foto golden hour</p>
-                    </div>
-                </a>
-
-                <!-- Card 2: Jalur Pegunungan Misty -->
-                <a href="https://wa.me/6281344712297?text=Halo,%20saya%20mau%20sewa%20motor%20untuk%20jalan-jalan%20ke%20pegunungan%20Jayapura."
-                   target="_blank" rel="noopener"
-                   class="explore-card" data-reveal data-reveal-delay="1" aria-label="Booking motor via WhatsApp untuk touring jalur pegunungan">
-                    <div class="explore-image">
-                        <img src="beat-fi-scenic.webp" alt="Honda Beat FI di jalan pegunungan misty Jayapura"
-                             width="480" height="600" loading="lazy" decoding="async">
-                    </div>
-                    <div class="explore-overlay">
-                        <span class="explore-badge"><span aria-hidden="true">📍</span> Jalur Pegunungan</span>
-                        <h3 class="explore-place">Jalur Misty Jayapura</h3>
-                        <p class="explore-mood">Cocok pagi hari · view dramatic, udara sejuk</p>
-                    </div>
-                </a>
-
-                <!-- Card 3: Cycloop Adventure -->
-                <a href="https://wa.me/6281344712297?text=Halo,%20saya%20mau%20sewa%20motor%20untuk%20adventure%20ke%20Cycloop."
-                   target="_blank" rel="noopener"
-                   class="explore-card" data-reveal data-reveal-delay="2" aria-label="Booking motor via WhatsApp untuk adventure ke Cycloop">
-                    <div class="explore-image">
-                        <img src="beat-street-scenic.webp" alt="Honda Beat Street di hutan tropis Cycloop"
-                             width="480" height="600" loading="lazy" decoding="async">
-                    </div>
-                    <div class="explore-overlay">
-                        <span class="explore-badge"><span aria-hidden="true">📍</span> Cycloop Mountain</span>
-                        <h3 class="explore-place">Hutan Tropis Cycloop</h3>
-                        <p class="explore-mood">Adventure ride · cocok untuk si suka tantangan</p>
-                    </div>
-                </a>
-
-                <!-- Card 4: Pusat Kota -->
-                <a href="https://wa.me/6281344712297?text=Halo,%20saya%20mau%20sewa%20motor%20untuk%20keliling%20pusat%20kota%20Sentani."
-                   target="_blank" rel="noopener"
-                   class="explore-card" data-reveal data-reveal-delay="3" aria-label="Booking motor via WhatsApp untuk keliling pusat kota">
-                    <div class="explore-image">
-                        <img src="mio-m3-scenic.webp" alt="Yamaha Mio M3 di pusat kota Sentani"
-                             width="480" height="600" loading="lazy" decoding="async">
-                    </div>
-                    <div class="explore-overlay">
-                        <span class="explore-badge"><span aria-hidden="true">📍</span> Pusat Kota</span>
-                        <h3 class="explore-place">Sentani City Tour</h3>
-                        <p class="explore-mood">Kuliner & shopping · santai keliling kota</p>
-                    </div>
-                </a>
-            </div>
-
-            <div class="explore-cta" data-reveal>
-                <a href="#bikes" class="btn-explore">
-                    <span>Cek Spesifikasi &amp; Harga Motor</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
-            </div>
-        </div>
-    </section>
 
     <!-- ============================================================
          KEY ADVANTAGES
@@ -2974,6 +3212,8 @@
         </div>
     </section>
 
+    </main>
+
     <!-- ============================================================
          FOOTER
     ============================================================ -->
@@ -3062,19 +3302,20 @@
                 container.appendChild(iframe);
             };
 
-            if ('IntersectionObserver' in window) {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            loadSpline();
-                            observer.unobserve(container);
-                        }
-                    });
-                }, { rootMargin: '300px 0px', threshold: 0 });
-                observer.observe(container);
+            const initSplineLoad = () => {
+                setTimeout(() => {
+                    if ('requestIdleCallback' in window) {
+                        requestIdleCallback(() => loadSpline());
+                    } else {
+                        loadSpline();
+                    }
+                }, 800);
+            };
+
+            if (document.readyState === 'complete') {
+                initSplineLoad();
             } else {
-                // Fallback browser lama: load immediately
-                loadSpline();
+                window.addEventListener('load', initSplineLoad);
             }
         })();
 
@@ -3098,12 +3339,47 @@
 
             // Manual toggle: simpan ke localStorage agar persist
             if (toggle) {
-                toggle.addEventListener('click', () => {
+                toggle.addEventListener('click', (e) => {
                     const current = root.getAttribute('data-theme');
                     const next = current === 'dark' ? 'light' : 'dark';
-                    root.setAttribute('data-theme', next);
-                    try { localStorage.setItem('theme', next); } catch(e) {}
-                    updateLabel();
+                    
+                    if (!document.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                        root.setAttribute('data-theme', next);
+                        try { localStorage.setItem('theme', next); } catch(e) {}
+                        updateLabel();
+                        return;
+                    }
+
+                    const x = e.clientX;
+                    const y = e.clientY;
+                    const endRadius = Math.hypot(
+                        Math.max(x, window.innerWidth - x),
+                        Math.max(y, window.innerHeight - y)
+                    );
+
+                    const transition = document.startViewTransition(() => {
+                        root.setAttribute('data-theme', next);
+                        try { localStorage.setItem('theme', next); } catch(e) {}
+                        updateLabel();
+                    });
+
+                    transition.ready.then(() => {
+                        const clipPath = [
+                            `circle(0px at ${x}px ${y}px)`,
+                            `circle(${endRadius}px at ${x}px ${y}px)`
+                        ];
+                        
+                        document.documentElement.animate(
+                            {
+                                clipPath: next === 'dark' ? clipPath : clipPath.reverse()
+                            },
+                            {
+                                duration: 600,
+                                easing: 'ease-in-out',
+                                pseudoElement: next === 'dark' ? '::view-transition-new(root)' : '::view-transition-old(root)'
+                            }
+                        );
+                    });
                 });
             }
 
@@ -3118,6 +3394,64 @@
                 } catch(e) {}
             });
         })();
+
+
+        // Preloader Logic — fix race condition + scroll lock
+        document.addEventListener('DOMContentLoaded', () => {
+            const progress = document.getElementById('preloaderProgress');
+            const pl = document.getElementById('preloader');
+            let w = 0;
+            let preloaderHidden = false;
+
+            // FIX: Lock body scroll selama preloader aktif (no scroll-past-hero)
+            document.body.style.overflow = 'hidden';
+
+            const intv = setInterval(() => {
+                w += Math.random() * 15;
+                if(w > 90) w = 90;
+                if(progress) progress.style.width = w + '%';
+            }, 100);
+
+            const hidePreloader = () => {
+                if (preloaderHidden) return;
+                preloaderHidden = true;
+                clearInterval(intv);
+                if(progress) progress.style.width = '100%';
+                setTimeout(() => {
+                    if(pl) pl.classList.add('hide');
+                    document.body.style.overflow = '';  // unlock scroll
+                }, 400);
+            };
+
+            // FIX KRITIS: Hard timeout 4 detik max — supaya 4G user tidak nunggu kelamaan
+            // (Spline iframe 5-10MB bisa butuh 30s di 4G — hide preloader duluan supaya user lihat hero/skeleton)
+            const hardTimeout = setTimeout(hidePreloader, 4000);
+
+            // Hide saat window.load (semua resources siap)
+            window.addEventListener('load', () => {
+                clearTimeout(hardTimeout);
+                // Beri 200ms tambahan untuk render frame
+                setTimeout(hidePreloader, 200);
+            });
+        });
+
+
+        const backToTopBtn = document.getElementById('backToTop');
+        if (backToTopBtn) {
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // Mobile menu toggle (FIX: defensive null check untuk navLinks)
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navLinks = document.querySelector('.nav-links');
+        if (mobileMenuToggle && navLinks) {
+            mobileMenuToggle.addEventListener('click', () => navLinks.classList.toggle('active'));
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => navLinks.classList.remove('active'));
+            });
+        }
 
         // Nav scroll state
         const nav = document.getElementById('nav');
@@ -3250,8 +3584,11 @@
                 { name: 'Eko',   motor: 'Beat FI',  time: '32 menit lalu' },
             ];
             let idx = 0;
+            let showCount = 0;
+            const maxShows = 3;
 
             const showToast = () => {
+                if (showCount >= maxShows) return;
                 const a = activities[idx % activities.length];
                 document.getElementById('liveAvatar').textContent = a.name.charAt(0);
                 document.getElementById('liveText').innerHTML = `<strong>${a.name}</strong> baru booking <strong>${a.motor}</strong>`;
@@ -3259,15 +3596,108 @@
                 liveToast.classList.add('show');
                 setTimeout(() => liveToast.classList.remove('show'), 5000);
                 idx++;
+                showCount++;
             };
 
             // Pertama kali muncul setelah 8 detik (saat user udah lihat hero)
             setTimeout(() => {
                 showToast();
                 // Lalu rotasi tiap 12 detik (5s show + 7s gap)
-                setInterval(showToast, 12000);
+                const interval = setInterval(() => {
+                    if (showCount >= maxShows) clearInterval(interval);
+                    else showToast();
+                }, 12000);
             }, 8000);
         }
+
+
+        // Custom Cursor — desktop dengan mouse only (skip touch laptop hybrid)
+        // Guard: pointer:fine + hover:hover + tidak punya touchscreen + bukan reduced-motion
+        // FIX: Wrap di DOMContentLoaded supaya HTML cursor element pasti sudah ada
+        const isDesktopMouseOnly = window.matchMedia('(pointer: fine)').matches
+            && window.matchMedia('(hover: hover)').matches
+            && !('ontouchstart' in window)
+            && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (isDesktopMouseOnly) document.addEventListener('DOMContentLoaded', () => {
+            const cursor = document.getElementById('customCursor');
+            const follower = document.getElementById('customCursorFollower');
+            if (!cursor || !follower) return;  // defensive — kalau HTML kurang, skip aja
+            const INTERACTABLE_SELECTOR = 'a, button, .theme-toggle, .reviews-arrow, .reviews-dot, .explore-card, .bike-card, #backToTop';
+
+            let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+            let fX = mouseX, fY = mouseY;
+            let lastMoveTime = performance.now();
+            let rafId = null;
+            let cursorVisible = true;
+
+            // FIX: cuma simpan koordinat, jangan update DOM langsung (was layout thrash)
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                lastMoveTime = performance.now();
+                if (!cursorVisible) {
+                    cursor.style.opacity = '1';
+                    follower.style.opacity = '1';
+                    cursorVisible = true;
+                }
+            }, { passive: true });
+
+            // FIX: Cursor + follower update SEMUA via RAF (smooth + batched)
+            // FIX: Pause RAF kalau mouse idle 1.5s (battery saver)
+            const animate = () => {
+                cursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+                fX += (mouseX - fX) * 0.15;
+                fY += (mouseY - fY) * 0.15;
+                follower.style.transform = `translate(${fX}px, ${fY}px)`;
+
+                // Idle detection: kalau diam > 1.5s, fade out + stop RAF
+                if (performance.now() - lastMoveTime > 1500 && cursorVisible) {
+                    cursor.style.opacity = '0.3';
+                    follower.style.opacity = '0.3';
+                    cursorVisible = false;
+                }
+                rafId = requestAnimationFrame(animate);
+            };
+            animate();
+
+            // FIX: Pause RAF saat tab hidden (save battery)
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    if (rafId) cancelAnimationFrame(rafId);
+                    rafId = null;
+                } else if (!rafId) {
+                    animate();
+                }
+            });
+
+            // FIX KRITIS: Event delegation pada document — bind SEKALI saja
+            // (sebelumnya: setInterval(bindHover, 2000) → memory leak 27×2 listener tiap 2 detik)
+            document.addEventListener('mouseover', (e) => {
+                if (e.target.closest(INTERACTABLE_SELECTOR)) {
+                    cursor.classList.add('hover');
+                    follower.classList.add('hover');
+                }
+            }, { passive: true });
+
+            document.addEventListener('mouseout', (e) => {
+                if (e.target.closest(INTERACTABLE_SELECTOR)) {
+                    cursor.classList.remove('hover');
+                    follower.classList.remove('hover');
+                }
+            }, { passive: true });
+
+            // FIX: Disable custom cursor kalau user tap layar (touch detected post-load)
+            document.addEventListener('touchstart', () => {
+                cursor.style.display = 'none';
+                follower.style.display = 'none';
+                if (rafId) cancelAnimationFrame(rafId);
+                document.body.style.cursor = '';
+                document.querySelectorAll(INTERACTABLE_SELECTOR).forEach(el => {
+                    el.style.cursor = '';
+                });
+            }, { once: true, passive: true });
+        });  // end DOMContentLoaded wrapper for custom cursor
 
         // Magnetic button effect (Booking Sekarang + CTA Final)
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -3615,5 +4045,22 @@
             tryInit();
         }
     </script>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="custom-cursor" id="customCursor" aria-hidden="true"></div>
+    <div class="custom-cursor-follower" id="customCursorFollower" aria-hidden="true"></div>
+
+
+    <!-- ============================================================
+         CIRCULAR SCROLL PROGRESS & BACK TO TOP
+    ============================================================ -->
+    <button class="back-to-top" id="backToTop" aria-label="Kembali ke atas">
+        <svg class="progress-ring" width="56" height="56">
+            <circle class="progress-ring-circle-bg" stroke="var(--border-subtle)" stroke-width="3" fill="transparent" r="24" cx="28" cy="28"/>
+            <circle class="progress-ring-circle" id="progressRing" stroke="var(--blue-500)" stroke-width="3" fill="transparent" r="24" cx="28" cy="28" stroke-linecap="round"/>
+        </svg>
+        <svg class="btt-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </button>
+
 </body>
 </html>
